@@ -48,12 +48,6 @@ void game_key_down(game_t *game, SDL_Scancode scan_code) {
         game->key_states[scan_code] = TRUE;
     }
     switch(scan_code) {
-        case SDL_SCANCODE_1:
-            sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "aow"), -1);
-            break;
-        case SDL_SCANCODE_2:
-            sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "aow"), 64);
-            break;
         default: break;
     }
 }
@@ -62,9 +56,6 @@ void game_key_up(game_t *game, SDL_Scancode scan_code) {
     assert(game->key_states[scan_code]);
     game->key_states[scan_code] = FALSE;
     switch(scan_code) {
-        case SDL_SCANCODE_1:
-            printf("one up");
-            break;
         default: break;
     }
 }
