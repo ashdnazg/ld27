@@ -50,7 +50,6 @@ struct tween_s {
     tween_ptr_t ptr;
     tween_type_t type;
     tween_dir_t dir;
-    tween_value_t start;
     tween_value_t current;
     tween_value_t end;
     tween_func_t tween_cb;
@@ -118,6 +117,7 @@ tween_t * tween_manager_add_tween(tween_manager_t *t_manager, void *ptr, tween_t
                                                         
 void linear_tween(tween_t *tween);
 void quad_tween(tween_t *tween);
+void smooth_tween(tween_t *tween);
 #ifdef __cplusplus
 }
 #endif

@@ -49,7 +49,7 @@ int main(int argc, char* argv[]){
     bool draw = TRUE;
     game_t *game;
 
-    if (SDL_Init(SDL_INIT_EVERYTHING) == -1){
+    if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_NOPARACHUTE) == -1){
         printf("SDLInit Error:%s", SDL_GetError());
         return 1;
     }

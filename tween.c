@@ -10,9 +10,8 @@ tween_t * tween_new(void *ptr, tween_type_t type, unsigned int total_steps, twee
     tween->type = type;
     tween->steps = (dir == TWEEN_IN ? 0 : total_steps);
     tween->total_steps = total_steps;
-    tween->start = (dir == TWEEN_IN ? start : end);
-    tween->current = start;
-    tween->end = (dir == TWEEN_IN ? end : start);
+    SET_VAL(tween, tween->current, (dir == TWEEN_IN ? 0 : GET_VAL(tween, start) - GET_VAL(tween, end)));
+    SET_VAL(tween, tween->end, (dir == TWEEN_IN ? GET_VAL(tween, end) - GET_VAL(tween, start) : GET_VAL(tween, start) - GET_VAL(tween, end)));
     tween->dir = dir;
     tween->tween_cb = tween_cb;
     link_init(&(tween->all_tweens_link));
@@ -65,14 +64,21 @@ void tween_manager_tween(tween_manager_t *t_manager) {
 
 void linear_tween(tween_t *tween) {
     tween_value_t temp;
-    SET_VAL(tween, temp, START(tween) + (END(tween) - START(tween)) * tween->steps / tween->total_steps);
+    SET_VAL(tween, temp, END(tween) * tween->steps / tween->total_steps);
     INC_PTR(tween, GET_VAL(tween, temp) - CURRENT(tween));
     tween->current = temp;
 }
 
 void quad_tween(tween_t *tween) {
     tween_value_t temp;
-    SET_VAL(tween, temp, START(tween) + (END(tween) - START(tween)) * tween->steps * tween->steps / tween->total_steps / tween->total_steps);
+    SET_VAL(tween, temp, END(tween) * tween->steps * tween->steps / tween->total_steps / tween->total_steps);
+    INC_PTR(tween, GET_VAL(tween, temp) - CURRENT(tween));
+    tween->current = temp;
+}
+
+void smooth_tween(tween_t *tween) {
+    tween_value_t temp;
+    SET_VAL(tween, temp, 3 * END(tween) * tween->steps * tween->steps / tween->total_steps / tween->total_steps - 2 * END(tween) * tween->steps * tween->steps * tween->steps / tween->total_steps / tween->total_steps / tween->total_steps);
     INC_PTR(tween, GET_VAL(tween, temp) - CURRENT(tween));
     tween->current = temp;
 }
