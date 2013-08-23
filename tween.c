@@ -39,10 +39,11 @@ void tween_manager_free(tween_manager_t *t_manager) {
     mem_free(t_manager);
 }
 
-tween_t * tween_manager_add_tween(tween_manager_t *t_manager, void *ptr, tween_type_t type, unsigned int total_steps,
+tween_t * tween_manager_add_tween(tween_manager_t *t_manager, list_t *parent_tweens_list, void *ptr, tween_type_t type, unsigned int total_steps,
                                                         tween_value_t start, tween_value_t end, tween_dir_t dir, tween_func_t tween_cb) {
     tween_t *tween = tween_new(ptr, type, total_steps, start, end, dir, tween_cb);
     list_insert_tail(t_manager->all_tweens, tween);
+    list_insert_tail(parent_tweens_list, tween);
     return tween;
 }
 

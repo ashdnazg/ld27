@@ -8,6 +8,7 @@
 #include "int_list.h"
 #include "macros.h"
 #include "assets.h"
+#include "tween.h"
 
 animation_playback_t * animation_playback_new(renderable_t * renderable, animation_t * animation,
                                                 unsigned int interval, bool loop) {
@@ -42,6 +43,7 @@ void animation_playback_animate(animation_playback_t * playback) {
 
 renderable_t * renderable_new(sprite_t *default_sprite, int x, int y) {
     renderable_t *renderable = mem_alloc(sizeof(renderable_t));
+    renderable->tweens = list_new(tween_t, tweens_link)
     renderable->sprite = default_sprite;
     renderable->default_sprite = default_sprite;
     renderable->x = x;
@@ -59,6 +61,10 @@ void renderable_free(renderable_t *renderable) {
     if (renderable->animation_playback != NULL) {
         animation_playback_free(renderable->animation_playback);
     }
+    list_for_each(renderable->tweens, tween_t *, tween) {
+        tween_free(tween);
+    }
+    list_free(renderable->tweens);
     link_remove_from_list(&(renderable->renderables_link));
     mem_free(renderable);
 }

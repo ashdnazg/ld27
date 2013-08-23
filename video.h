@@ -43,6 +43,7 @@ typedef struct animation_playback_s {
 
 struct renederable_s {
     link_t renderables_link;
+    list_t *tweens;
     int x;
     int y;
     double scale;

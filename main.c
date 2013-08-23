@@ -69,7 +69,7 @@ int main(int argc, char* argv[]){
     next_frame_time = SDL_GetTicks();
     last_time = SDL_GetTicks();
     while (1) {
-        if(handle_input(game)) {
+        if(handle_input(game) || !(game->running)) {
             break;
         }
         
