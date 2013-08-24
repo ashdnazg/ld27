@@ -43,9 +43,9 @@ void game_free(game_t *game) {
 void game_init(game_t *game) {
     init_field(game, 300, 0);
     game->player = actor_new(game, ACTOR_TYPE_STREAKER, 100, 500, DIRECTION_S, NO_AI);
-    actor_new(game, ACTOR_TYPE_STREAKER, 600, 600, DIRECTION_S, ai_security_cb, NULL);
-    actor_new(game, ACTOR_TYPE_STREAKER, -300, 1200, DIRECTION_S, ai_security_cb, NULL);
-    actor_new(game, ACTOR_TYPE_STREAKER, 200, 400, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 600, 600, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, -300, 1200, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 200, 400, DIRECTION_S, ai_security_cb, NULL);
     sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "ambient"), 20, TRUE);
 }
 

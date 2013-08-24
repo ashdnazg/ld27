@@ -62,14 +62,16 @@ char * actor_get_graphics_name(actor_t *actor, actor_state_t state) {
     
     
     switch(actor->direction) {
+        case DIRECTION_NW:
         case DIRECTION_N:
         case DIRECTION_NE:
+            dir_str = "n";
+            break;
         case DIRECTION_E:
         case DIRECTION_SE:
         case DIRECTION_S:
         case DIRECTION_SW:
         case DIRECTION_W:
-        case DIRECTION_NW:
             dir_str = "s";
             break;
         default:
