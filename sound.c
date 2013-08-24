@@ -14,12 +14,13 @@ void exit_on_SDL_sound_error(void *pt) {
     }
 }
 
-sample_playback_t * sample_playback_new(sample_t *sample, int volume) {
+sample_playback_t * sample_playback_new(sample_t *sample, int volume, bool loop) {
     sample_playback_t *playback = mem_alloc(sizeof(sample_playback_t));
     link_init(&(playback->played_samples_link));
     playback->pos = 0;
     playback->volume = (volume < 0 || volume > SDL_MIX_MAXVOLUME) ? SDL_MIX_MAXVOLUME : volume;
     playback->sample = sample;
+    playback->loop = loop;
     return playback;
 }
 
@@ -32,12 +33,19 @@ void sample_playback_free(sample_playback_t * playback){
 
 void sound_callback(sound_manager_t *s_manager, Uint8 *stream, int len) {
     SDL_memset(stream, 0, len);
-    
+    int remaining;
 	list_for_each(s_manager->played_samples, sample_playback_t *, playback) {
-        SDL_MixAudio(stream, &(playback->sample->data[playback->pos]), MIN(len, (playback->sample->len - playback->pos)), playback->volume);
+        assert(!(playback->loop && (playback->sample->len < len)));
+        remaining = (playback->sample->len - playback->pos);
+        SDL_MixAudio(stream, &(playback->sample->data[playback->pos]), MIN(len, remaining), playback->volume);
         playback->pos += len;
-        if (playback->pos > playback->sample->len) {
-            sample_playback_free(playback);
+        if (playback->pos >= playback->sample->len) {
+            if (playback->loop) {
+                SDL_MixAudio(&(stream[remaining]), playback->sample->data, playback->pos - playback->sample->len, playback->volume);
+                playback->pos %= playback->sample->len;
+            } else {
+                sample_playback_free(playback);
+            }
         }
     }
 }
@@ -62,9 +70,9 @@ void sound_manager_free(sound_manager_t *s_manager) {
     mem_free(s_manager);
 }
 
-sample_playback_t * sound_manager_play_sample(sound_manager_t *s_manager, sample_t *sample, int volume) {
+sample_playback_t * sound_manager_play_sample(sound_manager_t *s_manager, sample_t *sample, int volume, bool loop) {
     int ret;
-    sample_playback_t *playback = sample_playback_new(sample, volume);
+    sample_playback_t *playback = sample_playback_new(sample, volume, loop);
     if(!(s_manager->open)) {
         memcpy(s_manager->spec, sample->spec, sizeof(SDL_AudioSpec));
         if(SDL_OpenAudio(s_manager->spec, NULL) != 0) {

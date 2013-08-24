@@ -20,7 +20,7 @@ typedef struct list_s {
 } list_t;
 
 
-
+typedef int (*key_cb_t)(void *node);
 
 
 
@@ -52,9 +52,9 @@ list_t * _list_new(unsigned int offset);
 
 #define list_for_each(list, type, var)\
   type var; \
-  type next##__LINE__  = list_head(list);\
-  while (((var = next##__LINE__) != NULL)\
-    && ((next##__LINE__ = list_next(list, var)) || TRUE))
+  type next_##var  = list_head(list);\
+  while (((var = next_##var) != NULL)\
+    && ((next_##var = list_next(list, var)) || TRUE))
 
 void list_free(list_t *list);
 
@@ -73,6 +73,8 @@ void list_insert_tail(list_t *list, void *node);
 
 void list_insert_before(list_t *list, void *node, void *before);
 void list_insert_after(list_t *list, void *node, void *after);
+
+void list_sort(list_t *list, key_cb_t key_cb);
 
 #ifdef __cplusplus
 }

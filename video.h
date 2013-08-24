@@ -46,6 +46,7 @@ struct renederable_s {
     list_t *tweens;
     int x;
     int y;
+    int depth;
     double scale;
     double angle;
     SDL_Point *center;
@@ -60,6 +61,8 @@ typedef struct render_manager_s {
     list_t *renderables;
     list_t *animation_playbacks;
     asset_manager_t *textures;
+    int x_offset;
+    int y_offset;
 } render_manager_t;
 
 
@@ -80,7 +83,7 @@ render_manager_t * render_manager_new(SDL_Renderer *renderer);
 void render_manager_free(render_manager_t *r_manager);
 
 
-renderable_t * render_manager_create_renderable(render_manager_t *r_manager, sprite_t *default_sprite, int x, int y);
+renderable_t * render_manager_create_renderable(render_manager_t *r_manager, sprite_t *default_sprite, int x, int y, int depth);
 void renderable_free(renderable_t *renderable);
 
 void render_manager_play_animation(render_manager_t *r_manager, renderable_t *renderable, animation_t *animation, unsigned int interval, bool loop);

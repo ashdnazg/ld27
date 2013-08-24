@@ -41,13 +41,14 @@ void animation_playback_animate(animation_playback_t * playback) {
 }
 
 
-renderable_t * renderable_new(sprite_t *default_sprite, int x, int y) {
+renderable_t * renderable_new(sprite_t *default_sprite, int x, int y, int depth) {
     renderable_t *renderable = mem_alloc(sizeof(renderable_t));
     renderable->tweens = list_new(tween_t, tweens_link)
     renderable->sprite = default_sprite;
     renderable->default_sprite = default_sprite;
     renderable->x = x;
     renderable->y = y;
+    renderable->depth = depth;
     renderable->scale = 1.0;
     renderable->angle = 0;
     renderable->center = NULL;
@@ -88,6 +89,8 @@ render_manager_t * render_manager_new(SDL_Renderer *renderer) {
     r_manager->renderables = list_new(renderable_t, renderables_link);
     r_manager->animation_playbacks = list_new(animation_playback_t, animation_playbacks_link);
     r_manager->textures = asset_manager_new((free_cb_t) SDL_DestroyTexture);
+    r_manager->x_offset = 0;
+    r_manager->y_offset = 0;
     return r_manager;
 }
 
@@ -102,14 +105,15 @@ void render_manager_free(render_manager_t *r_manager) {
     mem_free(r_manager);
 }
 
-renderable_t * render_manager_create_renderable(render_manager_t *r_manager, sprite_t *default_sprite, int x, int y) {
-    renderable_t *renderable = renderable_new(default_sprite, x , y);
+renderable_t * render_manager_create_renderable(render_manager_t *r_manager, sprite_t *default_sprite, int x, int y, int depth) {
+    renderable_t *renderable = renderable_new(default_sprite, x , y, depth);
     list_insert_tail(r_manager->renderables, renderable);
     return renderable;
 }
 
 void render_manager_play_animation(render_manager_t *r_manager, renderable_t *renderable, 
                                     animation_t *animation, unsigned int interval, bool loop) {
+    render_manager_stop_animation(r_manager, renderable);
     animation_playback_t * playback = animation_playback_new(renderable, animation, interval, loop);
     renderable->animation_playback = playback;
     list_insert_tail(r_manager->animation_playbacks, playback);
@@ -126,12 +130,15 @@ void render_manager_animate(render_manager_t *r_manager) {
         animation_playback_animate(playback);
     }
 }
-
+int get_y(renderable_t *renderable) {
+    return -(renderable->y + renderable->depth);
+}
 void render_manager_draw(render_manager_t *r_manager) {
     SDL_RenderClear(r_manager->renderer);
+    list_sort(r_manager->renderables, (key_cb_t) get_y);
     list_for_each(r_manager->renderables, renderable_t *, renderable){
-        draw_sprite(r_manager, renderable->sprite, renderable->x, renderable->y, renderable->scale, 
-                    renderable->angle, renderable->center, renderable->flip);
+        draw_sprite(r_manager, renderable->sprite, renderable->x + r_manager->x_offset, renderable->y + r_manager->y_offset, 
+                                renderable->scale, renderable->angle, renderable->center, renderable->flip);
     }
     SDL_RenderPresent(r_manager->renderer);
 }

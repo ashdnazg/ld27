@@ -30,7 +30,35 @@ bool handle_input(game_t *game){
 }
 
 void load_assets(game_t *game){
+    sprite_t **sprites = mem_alloc(16 *sizeof(sprite_t *));
+    animation_t * anim = NULL;
+    int num_sprites, i;
     
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "grass.png"), "grass");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_run_s00.png"), "streaker_run_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_run_s01.png"), "streaker_run_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_s00.png"), "streaker_wiggle_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_s01.png"), "streaker_wiggle_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_s02.png"), "streaker_wiggle_s02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_stand_s.png"), "streaker_stand_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_run_s00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_run_s01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "streaker_run_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_wiggle_s00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_wiggle_s01");
+    sprites[2] = asset_manager_get(game->sprites, "streaker_wiggle_s00");
+    sprites[3] = asset_manager_get(game->sprites, "streaker_wiggle_s01");
+    sprites[4] = asset_manager_get(game->sprites, "streaker_wiggle_s02");
+    sprites[5] = asset_manager_get(game->sprites, "streaker_wiggle_s01");
+    sprites[6] = asset_manager_get(game->sprites, "streaker_wiggle_s02");
+    sprites[7] = asset_manager_get(game->sprites, "streaker_wiggle_s01");
+    asset_manager_add(game->animations, animation_new(sprites, 8), "streaker_wiggle_s");
+    asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "ambient.wav"), "ambient");
+    asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "wiggle.wav"), "wiggle");
+    
+    mem_free(sprites);
 }
 
 int main(int argc, char* argv[]){
@@ -65,6 +93,7 @@ int main(int argc, char* argv[]){
     
     game = game_new(r_manager);
     load_assets(game);
+    game_init(game);
     
     next_frame_time = SDL_GetTicks();
     last_time = SDL_GetTicks();

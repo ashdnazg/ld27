@@ -1,5 +1,6 @@
 #define GAME_NAME "Test Game"
-#define GAME_WIDTH 640
-#define GAME_HEIGHT 480
-#define WINDOW_SCALE 1
+#define GAME_WIDTH 320
+#define GAME_HEIGHT 240
+#define WINDOW_SCALE 2
 #define STEP_INTERVAL 17
+#define ASSETS_DIR "assets\\"

@@ -1,6 +1,7 @@
 #include "int_list.h"
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "macros.h"
 #include "mem_wrap.h"
 
@@ -151,4 +152,77 @@ void list_insert_after(list_t *list, void *node, void *after) {
         node,
         after ? list_get_link(list, after) : &(list->sentinel)
     );
+}
+
+void list_sort(list_t *list, key_cb_t key_cb) {
+    void *p;
+    void *q;
+    void *next;
+    int i, psize, qsize;
+    int merges = 0;
+    int sublist_size = 1;
+    list_t *list_a;
+    list_t *list_b;
+    if (list_head(list) == NULL) {
+        return;
+    }
+    list_a = _list_new(list->offset);
+    list_b = _list_new(list->offset);
+    list_t *list_from = list;
+    list_t *list_to = list_a;
+    while (merges != 1) {
+        merges = 0;
+        p = list_head(list_from);
+        q = p;
+        for (;;) {
+            // printf("\nmerges: %d, p: %d, q: %d",merges, p , q);
+            // printf("\nfrom_head: %d, to_head: %d, to_tail: %d",list_head(list_from), list_head(list_to), list_tail(list_to));
+            // scanf("%d", &i);
+            if (p == NULL) {
+                break;
+            }
+            psize = 0;
+            for (i = 0;i < sublist_size;++i) {
+                q = list_next(list_from, q);
+                // printf("\nadvanced q: %d", q);
+                ++psize;
+                if (q == NULL) {
+                    break;
+                }
+            }
+            qsize = sublist_size;
+            while (psize > 0 || (qsize > 0 && q != NULL)){
+                //printf("\npsize: %d, qsize: %d, p: %d, q: %d", psize, qsize, p, q);
+                if (qsize == 0 || q == NULL || (psize > 0 && (key_cb(p) >= key_cb(q)))) {
+                    // printf("\npicked p: %d", key_cb(p));
+                    next = list_next(list_from, p);
+                    list_insert_tail(list_to, p);
+                    p = next;
+                    --psize;
+                } else {
+                    // printf("\npicked q: %d", key_cb(q));
+                    next = list_next(list_from, q);
+                    list_insert_tail(list_to, q);
+                    q = next;
+                    --qsize;
+                }
+            }
+            p = q;
+            ++merges;
+        }
+        // printf("\nmerges: %d", merges);
+        sublist_size *= 2;
+        if (list_to == list_a) {
+            list_from = list_a;
+            list_to = list_b;
+        } else {
+            list_from = list_b;
+            list_to = list_a;
+        }
+    }
+    list_for_each(list_from, void *, node) {
+        list_insert_tail(list, node);
+    }
+    list_free(list_a);
+    list_free(list_b);
 }
