@@ -17,6 +17,7 @@ game_t * game_new(render_manager_t *r_manager) {
     game->s_manager = sound_manager_new();
     game->t_manager = tween_manager_new();
     game->running = TRUE;
+    game->steps = 0;
     game->sprites = asset_manager_new((free_cb_t) sprite_free);
     game->animations = asset_manager_new((free_cb_t) animation_free);
     game->samples = asset_manager_new((free_cb_t)sample_free);
@@ -59,7 +60,9 @@ void ai_step(game_t *game) {
 void game_step(game_t *game, bool draw) {
     render_manager_animate(game->r_manager);
     tween_manager_tween(game->t_manager);
-    ai_step(game);
+    if((game->steps % AI_FREQ) == 0) {
+        ai_step(game);
+    }
     list_for_each(game->actors, actor_t *, actor) {
         actor_step(game, actor);
     }
@@ -68,6 +71,7 @@ void game_step(game_t *game, bool draw) {
     if (draw) {
         render_manager_draw(game->r_manager);
     }
+    ++(game->steps);
 }
 
 void update_player_state(game_t *game) {

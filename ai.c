@@ -7,53 +7,19 @@
 
 void ai_security_cb(game_t *game, actor_t *actor) {
     int new_direction = 0;
+    int collision_direction;
     int i;
-    if (game->player->x < actor->x) {
-        new_direction |= BIT_W;
-    } else if (game->player->x > actor->x) {
-        new_direction |= BIT_E;
+    if(!(actor->active)) {
+        return;
     }
-    if (game->player->y < actor->y) {
-        new_direction |= BIT_N;
-    } else if (game->player->y > actor->y) {
-        new_direction |= BIT_S;
+    if (ABS(actor->x - game->player->x) + ABS(actor->y - game->player->y) < JUMP_THRESHOLD) {
+        actor_set_state(game, actor, STATE_JUMP);
     }
+    new_direction = get_direction(actor->x, actor->y, game->player->x, game->player->y);
     list_for_each(game->actors, actor_t *, other){
-        if (actor != other && other != game->player && (ABS(actor->x - other->x) + ABS(actor->y - other->y)) < CLOSE_THRESHOLD * 2) {
-            if (actor->x > other->x) {
-                if (actor->x - other->x == CLOSE_THRESHOLD) {
-                    new_direction &= ~BIT_W;
-                } else if (actor->x - other->x < CLOSE_THRESHOLD){
-                    assert(actor->x - other->x >= 0);
-                    new_direction &= ~BIT_W;
-                    new_direction |= BIT_E;
-                }
-            } else {
-                if (other->x - actor->x == CLOSE_THRESHOLD) {
-                    new_direction &= ~BIT_E;
-                } else if (other->x - actor->x < CLOSE_THRESHOLD){
-                    assert(other->x - actor->x >= 0);
-                    new_direction &= ~BIT_E;
-                    new_direction |= BIT_W;
-                }
-            }
-            if (actor->y > other->y) {
-                if (actor->y - other->y == CLOSE_THRESHOLD) {
-                    new_direction &= ~BIT_N;
-                } else if (actor->y - other->y < CLOSE_THRESHOLD){
-                    assert(actor->y - other->y >= 0);
-                    new_direction &= ~BIT_N;
-                    new_direction |= BIT_S;
-                }
-            } else {
-                if (other->y - actor->y == CLOSE_THRESHOLD) {
-                    new_direction &= ~BIT_S;
-                } else if (other->y - actor->y < CLOSE_THRESHOLD){
-                    assert(other->y - actor->y >= 0);
-                    new_direction &= ~BIT_S;
-                    new_direction |= BIT_N;
-                }
-            }
+        if (actor != other && other != game->player && other->active && (ABS(actor->x - other->x) + ABS(actor->y - other->y)) < CLOSE_THRESHOLD * 2) {
+            collision_direction = get_direction(other->x, other->y, actor->x, actor->y);
+            new_direction = collision_direction;
         }
     }
     if (new_direction == 0) {

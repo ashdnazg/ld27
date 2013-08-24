@@ -10,6 +10,7 @@ extern "C" {
 #include "game.h"
 
 #define CLOSE_THRESHOLD 10
+#define JUMP_THRESHOLD 20
 
 void ai_security_cb(game_t *game, actor_t *actor);
 

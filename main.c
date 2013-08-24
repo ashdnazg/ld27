@@ -40,11 +40,19 @@ void load_assets(game_t *game){
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_s00.png"), "streaker_wiggle_s00");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_s01.png"), "streaker_wiggle_s01");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_s02.png"), "streaker_wiggle_s02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_s00.png"), "streaker_jump_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_s01.png"), "streaker_jump_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_s02.png"), "streaker_jump_s02");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_stand_s.png"), "streaker_stand_s");
     
     sprites[0] = asset_manager_get(game->sprites, "streaker_run_s00");
     sprites[1] = asset_manager_get(game->sprites, "streaker_run_s01");
     asset_manager_add(game->animations, animation_new(sprites, 2), "streaker_run_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_jump_s00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_jump_s01");
+    sprites[2] = asset_manager_get(game->sprites, "streaker_jump_s02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "streaker_jump_s");
     
     sprites[0] = asset_manager_get(game->sprites, "streaker_wiggle_s00");
     sprites[1] = asset_manager_get(game->sprites, "streaker_wiggle_s01");

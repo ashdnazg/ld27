@@ -17,12 +17,15 @@ typedef struct actor_s actor_t;
 
 #define RUN_INTERVAL 5
 #define WIGGLE_INTERVAL 5
+#define JUMP_INTERVAL 5
 
+#define JUMP_DURATION 20
 
 typedef enum actor_state_e {
     STATE_STAND,
     STATE_RUN,
     STATE_WIGGLE,
+    STATE_JUMP,
 } actor_state_t;
 
 #define ACTOR_DEPTH 0
@@ -33,6 +36,7 @@ typedef enum actor_state_e {
 #define STAND_STR "stand"
 #define RUN_STR "run"
 #define WIGGLE_STR "wiggle"
+#define JUMP_STR "jump"
 
 typedef enum actor_type_e {
     ACTOR_TYPE_STREAKER,
@@ -74,9 +78,11 @@ struct actor_s {
     int x;
     int y;
     actor_state_t state;
+    int state_duration;
     actor_direction_t direction;
     renderable_t *renderable;
     sample_playback_t *voice;
+    bool active;
     ai_cb_t ai_cb;
     void *ai_params;
 };
@@ -90,6 +96,7 @@ void actor_set_pos(actor_t *actor, int x, int y);
 void actor_set_dir(game_t *game, actor_t *actor, actor_direction_t direction);
 
 void actor_step(game_t *game, actor_t *actor);
+actor_direction_t get_direction(int x1, int y1, int x2, int y2);
 
 #ifdef __cplusplus
 }

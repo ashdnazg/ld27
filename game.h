@@ -28,6 +28,7 @@ struct game_s {
     actor_t *player;
     bool running;
     bool key_states[SDL_NUM_SCANCODES] ;
+    int steps;
 };
 
 

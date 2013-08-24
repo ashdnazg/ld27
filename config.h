@@ -4,3 +4,4 @@
 #define WINDOW_SCALE 2
 #define STEP_INTERVAL 17
 #define ASSETS_DIR "assets\\"
+#define AI_FREQ 4
