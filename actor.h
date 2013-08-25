@@ -104,6 +104,8 @@ struct actor_s {
     sample_playback_t *voice;
     projectile_t *projectile;
     bool active;
+    int aim_x;
+    int aim_y;
     ai_cb_t ai_cb;
     void *ai_params;
 };

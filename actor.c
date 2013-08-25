@@ -150,6 +150,8 @@ void actor_set_state(game_t *game, actor_t *actor, actor_state_t state) {
             actor->renderable->default_sprite = actor->renderable->animation_playback->animation->frames[actor->renderable->animation_playback->animation->num_frames - 1];
             actor->active = FALSE;
             actor->state_duration = AIM_DURATION;
+            actor->aim_x = game->player->x;
+            actor->aim_y = game->player->y;
             mem_free(graphics_name);
             break;
         case STATE_SHOCK:
@@ -290,7 +292,7 @@ void actor_step(game_t *game, actor_t *actor) {
             }
             if (actor->state_duration == TASE_SHOT_MOMENT) {
                 actor->projectile = projectile_new(game, asset_manager_get(game->sprites, "taser_projectile"), actor->x, actor->y,
-                                                     game->player->x, game->player->y, 40, 200, 20, TRUE, taser_hit, actor);
+                                                     (actor->aim_x + game->player->x) / 2, (actor->aim_y + game->player->y) / 2, 40, 120, 20, TRUE, taser_hit, actor);
             }
             break;
         case STATE_WIGGLE: break;

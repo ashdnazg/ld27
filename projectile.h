@@ -16,7 +16,7 @@ typedef struct projectile_s projectile_t;
 #define MAX_RENDERABLES 256
 #define PROJECTILE_DEPTH 3
 
-#define PROJECTILE_RADIUS 5
+#define PROJECTILE_RADIUS 10
 
 typedef void (*hit_cb_t)(game_t *game, projectile_t *projectile, actor_t *actor);
 
