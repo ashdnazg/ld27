@@ -18,6 +18,12 @@ typedef struct game_s game_t;
 #include <SDL2/SDL.h>
 
 #define MAX_SCORE_LEN 10
+#define FIELD_X 0
+#define FIELD_Y 0
+#define FIELD_DEPTH -1000
+
+#define LOGO_X 260
+#define LOGO_Y 210
 
 struct game_s {
     render_manager_t *r_manager;
@@ -30,6 +36,7 @@ struct game_s {
     list_t *actors;
     actor_t *player;
     renderable_t **timer_caption;
+    renderable_t *logo;
     unsigned int len_timer_caption;
     bool running;
     bool key_states[SDL_NUM_SCANCODES] ;

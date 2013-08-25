@@ -5,7 +5,6 @@
 #include "tween.h"
 #include "macros.h"
 #include "mem_wrap.h"
-#include "field.h"
 #include "actor.h"
 #include <SDL2/SDL.h>
 #include <stdio.h>
@@ -21,6 +20,7 @@ game_t * game_new(render_manager_t *r_manager) {
     game->steps = 0;
     game->len_timer_caption = 0;
     game->timer_caption = NULL;
+    game->logo = NULL;
     game->sprites = asset_manager_new((free_cb_t) sprite_free);
     game->animations = asset_manager_new((free_cb_t) animation_free);
     game->samples = asset_manager_new((free_cb_t)sample_free);
@@ -39,6 +39,9 @@ void game_free(game_t *game) {
     if (game->timer_caption != NULL){
         mem_free(game->timer_caption);
     }
+    if (game->logo != NULL){
+        renderable_free(game->logo);
+    }
     list_for_each(game->actors, actor_t *, actor) {
         actor_free(actor);
     }
@@ -47,15 +50,39 @@ void game_free(game_t *game) {
 }
 
 void game_init(game_t *game) {
-    init_field(game, 300, 0);
-    game->player = actor_new(game, ACTOR_TYPE_STREAKER, 100, 500, DIRECTION_S, NO_AI);
-    actor_new(game, ACTOR_TYPE_SECURITY, 600, 600, DIRECTION_S, ai_security_cb, NULL);
-    actor_new(game, ACTOR_TYPE_SECURITY, -200, 1200, DIRECTION_S, ai_security_cb, NULL);
-    actor_new(game, ACTOR_TYPE_SECURITY, 200, 400, DIRECTION_S, ai_security_cb, NULL);
-    actor_new(game, ACTOR_TYPE_RED_PLAYER, 200, 700, DIRECTION_S, ai_player_cb, NULL);
-    actor_new(game, ACTOR_TYPE_RED_PLAYER, -300, 1000, DIRECTION_S, ai_player_cb, NULL);
-    actor_new(game, ACTOR_TYPE_BLUE_PLAYER, -100, 800, DIRECTION_S, ai_player_cb, NULL);
-    actor_new(game, ACTOR_TYPE_BLUE_PLAYER, 400, 600, DIRECTION_S, ai_player_cb, NULL);
+    //init_field(game, FIELD_X, FIELD_Y);
+    render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "field"), FIELD_X, FIELD_Y, FIELD_DEPTH);
+    game->player = actor_new(game, ACTOR_TYPE_STREAKER, 1016, 1232, DIRECTION_N, NO_AI);
+    actor_new(game, ACTOR_TYPE_SECURITY, 1205,1073, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 874, 1370, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 736,650, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 380,966, DIRECTION_S, ai_security_cb, NULL);
+    
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,911, 1025,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,873, 953 ,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,779, 945 ,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,940, 794 ,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1034,914 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1192,972 ,DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1209,861 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1072,748 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,972, 594 ,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,836, 666 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1222,622 , DIRECTION_S, ai_player_cb, NULL);
+    
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,794,1090,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,705,1037,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,508,1014,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,550,1160,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,643,1231, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,796,1284,DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,673,1449, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,539,1391, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,442,1226,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,344,1122, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,366,1408, DIRECTION_S, ai_player_cb, NULL);
+    
+    game->logo = render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "logo"), 0, 0, 1000);
     sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "ambient"), 20, TRUE, NULL);
 }
 
@@ -147,6 +174,8 @@ void game_step(game_t *game, bool draw) {
     game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
     game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
     if (draw) {
+        game->logo->x = -game->r_manager->x_offset + LOGO_X;
+        game->logo->y = -game->r_manager->y_offset + LOGO_Y;
         update_timer(game);
         render_manager_draw(game->r_manager);
     }
@@ -178,7 +207,6 @@ void update_player_state(game_t *game) {
     }
     
     if (game->key_states[SDL_SCANCODE_SPACE]) {
-        printf("\nwiggle");
         if (direction != 0) {
             actor_set_dir(game, game->player, (actor_direction_t) direction);
         }
@@ -186,11 +214,9 @@ void update_player_state(game_t *game) {
         return;
     }
     if (direction != 0) {
-        printf("\nrun");
         actor_set_dir(game, game->player, (actor_direction_t) direction);
         actor_set_state(game, game->player, STATE_RUN);
     } else {
-        printf("\nstand");
         actor_set_state(game, game->player, STATE_STAND);
     }
 }
@@ -208,6 +234,9 @@ void game_key_down(game_t *game, SDL_Scancode scan_code) {
         case SDL_SCANCODE_LEFT:
         case SDL_SCANCODE_SPACE:
             update_player_state(game);
+            break;
+        case SDL_SCANCODE_P:
+            printf("\nx: %d,y:%d", game->player->x, game->player->y);
             break;
         default: break;
     }

@@ -35,8 +35,13 @@ void load_assets(game_t *game){
     animation_t * anim = NULL;
     int num_sprites, i;
     
-    //SOUTH
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "grass.png"), "grass");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "field.png"), "field");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "logo.png"), "logo");
+    
+    
+    //SOUTH
+    
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_run_s00.png"), "streaker_run_s00");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_run_s01.png"), "streaker_run_s01");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_s00.png"), "streaker_wiggle_s00");
@@ -440,7 +445,7 @@ int main(int argc, char* argv[]){
             game_step(game, draw);
             ++frames_this_second;
             if ((SDL_GetTicks() - last_time) >= 1000){
-                printf("\nframes: %d", frames_this_second);
+                //printf("\nframes: %d", frames_this_second);
                 frames_this_second = 0;
                 last_time += 1000;
             }
