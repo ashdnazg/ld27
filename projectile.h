@@ -12,19 +12,21 @@ typedef struct projectile_s projectile_t;
 #include "macros.h"
 #include "actor.h"
 #define LIFETIME_PERMANENT -1
-#define MAX_RENDERABLES 100
+#define MAX_RENDERABLES 256
 #define PROJECTILE_DEPTH 3
 
 typedef void (*hit_cb)(game_t *game, projectile_t *projectile, actor_t *actor);
 
 struct projectile_s {
-    list_t *tweens;
     sprite_t *sprite;
+    int start_x;
+    int start_y;
     int x;
     int y;
-    int old_x;
-    int old_y;
-    int length;
+    int dest_x;
+    int dest_y;
+    unsigned int length;
+    unsigned int speed;
     int lifetime;
     bool trail;
     renderable_t **renderables;
@@ -33,7 +35,7 @@ struct projectile_s {
     void **parent_ptr;
 };
 
-projectile_t * projectile_new(game_t *game, sprite_t *sprite, int x, int y, int dest_x, int dest_y, int lifetime, bool trail, void **parent_ptr);
+projectile_t * projectile_new(game_t *game, sprite_t *sprite, int x, int y, int dest_x, int dest_y, unsigned int speed, unsigned int length, int lifetime, bool trail, void **parent_ptr);
 void projectile_free(projectile_t *projectile);
 
 
