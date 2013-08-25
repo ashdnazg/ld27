@@ -35,7 +35,6 @@ void load_assets(game_t *game){
     animation_t * anim = NULL;
     int num_sprites, i;
     
-    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "grass.png"), "grass");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "field.png"), "field");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "logo.png"), "logo");
     
