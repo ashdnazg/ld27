@@ -152,6 +152,16 @@ void actor_set_state(game_t *game, actor_t *actor, actor_state_t state) {
             actor->state_duration = AIM_DURATION;
             mem_free(graphics_name);
             break;
+        case STATE_SHOCK:
+            render_manager_play_animation(game->r_manager,  actor->renderable, asset_manager_get(game->animations, 
+                                                    "shock"), SHOCK_INTERVAL, TRUE);
+            if (actor->voice != NULL) {
+                sample_playback_free(actor->voice);
+                actor->voice = NULL;
+            }
+            actor->active = FALSE;
+            actor->state_duration = SHOCK_DURATION;
+            break;
     }
     actor->state = state;
 }
@@ -275,12 +285,22 @@ void actor_step(game_t *game, actor_t *actor) {
             }
             break;
         case STATE_AIM:
-            if (actor->state_duration == TASE_MOMENT) {
+            if (actor->state_duration == TASE_SOUND_MOMENT) {
+                sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "shot"), -1, FALSE, NULL);
+            }
+            if (actor->state_duration == TASE_SHOT_MOMENT) {
                 actor->projectile = projectile_new(game, asset_manager_get(game->sprites, "taser_projectile"), actor->x, actor->y,
-                                                     game->player->x, game->player->y, 40, 200, 20, TRUE, (void **) &(actor->projectile));
+                                                     game->player->x, game->player->y, 40, 200, 20, TRUE, taser_hit, actor);
             }
             break;
         case STATE_WIGGLE: break;
+        case STATE_SHOCK:
+            if (actor->state_duration == 0) {
+                actor_set_dir(game, actor, DIRECTION_S);
+                actor_set_state(game, actor, STATE_JUMP);
+                actor->state_duration = 0;
+            }
+            break;
         default:
             printf("\nbad state: %d", actor->state);
             exit(1);

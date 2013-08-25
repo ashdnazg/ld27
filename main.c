@@ -465,6 +465,15 @@ void load_assets(game_t *game){
     sprites[1] = asset_manager_get(game->sprites, "police_aim_e01");
     asset_manager_add(game->animations, animation_new(sprites, 2), "police_aim_e");
     
+    
+    //SHOCK
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "shock00.png"),    "shock00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "shock01.png"),    "shock01");
+    
+    sprites[0] = asset_manager_get(game->sprites, "shock00");
+    sprites[1] = asset_manager_get(game->sprites, "shock01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "shock");
+    
     font_manager_load_font(game, game->f_manager, ASSETS_DIR "font.png", 8, 8);
     
     
@@ -473,6 +482,8 @@ void load_assets(game_t *game){
     asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "bump.wav"), "bump");
     asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "getaway.wav"), "getaway");
     asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "jump.wav"), "jump");
+    asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "shot.wav"), "shot");
+    asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "shock.wav"), "shock");
     
     mem_free(sprites);
 }

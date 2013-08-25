@@ -52,10 +52,10 @@ void game_free(game_t *game) {
 void game_init(game_t *game) {
     render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "field"), FIELD_X, FIELD_Y, FIELD_DEPTH);
     game->player = actor_new(game, ACTOR_TYPE_STREAKER, 1016, 1232, DIRECTION_N, NO_AI);
-    actor_new(game, ACTOR_TYPE_POLICE, 1205,1060, DIRECTION_S, ai_police_cb, NULL);
-    //actor_new(game, ACTOR_TYPE_SECURITY, 874, 1360, DIRECTION_S, ai_security_cb, NULL);
-    //actor_new(game, ACTOR_TYPE_SECURITY, 736,650, DIRECTION_S, ai_security_cb, NULL);
-    //actor_new(game, ACTOR_TYPE_SECURITY, 380,966, DIRECTION_S, ai_security_cb, NULL);
+    // actor_new(game, ACTOR_TYPE_SECURITY, 1205,1060, DIRECTION_S, ai_security_cb, NULL);
+    // actor_new(game, ACTOR_TYPE_SECURITY, 874, 1360, DIRECTION_S, ai_security_cb, NULL);
+    // actor_new(game, ACTOR_TYPE_SECURITY, 736,650, DIRECTION_S, ai_security_cb, NULL);
+    // actor_new(game, ACTOR_TYPE_SECURITY, 380,966, DIRECTION_S, ai_security_cb, NULL);
     
     // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,911, 1025,  DIRECTION_S, ai_player_cb, NULL);
     // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,873, 953 ,  DIRECTION_S, ai_player_cb, NULL);

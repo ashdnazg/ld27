@@ -17,17 +17,20 @@ typedef struct actor_s actor_t;
 
 #define COLLISION_RADIUS 7
 
-#define DISTANCESQ(actor_a,actor_b) (((actor_a)->x - (actor_b->x)) * ((actor_a)->x - (actor_b->x)) + ((actor_a)->y - (actor_b->y)) * ((actor_a)->y - (actor_b->y)))
+#define DISTANCESQ(object_x,object_y) (((object_x)->x - (object_y->x)) * ((object_x)->x - (object_y->x)) + ((object_x)->y - (object_y->y)) * ((object_x)->y - (object_y->y)))
 
 #define RUN_INTERVAL 5
 #define WIGGLE_INTERVAL 5
 #define JUMP_INTERVAL 5
 #define AIM_INTERVAL 10
+#define SHOCK_INTERVAL 5
 
 #define JUMP_DURATION 20
 #define AIM_DURATION 30
+#define SHOCK_DURATION 60
 
-#define TASE_MOMENT 10
+#define TASE_SOUND_MOMENT 20
+#define TASE_SHOT_MOMENT 10
 
 typedef enum actor_state_e {
     STATE_STAND,
@@ -35,6 +38,7 @@ typedef enum actor_state_e {
     STATE_WIGGLE,
     STATE_JUMP,
     STATE_AIM,
+    STATE_SHOCK,
 } actor_state_t;
 
 #define ACTOR_DEPTH 0

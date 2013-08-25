@@ -4,7 +4,8 @@
 #include "macros.h"
 #include <stdio.h>
 
-projectile_t * projectile_new(game_t *game, sprite_t *sprite, int x, int y, int dest_x, int dest_y, unsigned int speed, unsigned int length, int lifetime, bool trail, void **parent_ptr) {
+projectile_t * projectile_new(game_t *game, sprite_t *sprite, int x, int y, int dest_x, int dest_y, unsigned int speed, 
+                                unsigned int length, int lifetime, bool trail, hit_cb_t hit_cb, actor_t *parent) {
     projectile_t *projectile = mem_alloc(sizeof(projectile_t));
     projectile->renderables = mem_alloc(MAX_RENDERABLES * sizeof(renderable_t *));
     projectile->sprite = sprite;
@@ -20,7 +21,8 @@ projectile_t * projectile_new(game_t *game, sprite_t *sprite, int x, int y, int 
     projectile->trail = trail;
     projectile->renderables[0] = NULL;
     projectile->num_renderables = 0;
-    projectile->parent_ptr = parent_ptr;
+    projectile->hit_cb = hit_cb;
+    projectile->parent = parent;
     
     return projectile;
 }
@@ -29,40 +31,55 @@ void put_renderable(game_t *game, projectile_t *projectile, int x, int y) {
     ++(projectile->num_renderables);
     projectile->length -= 1;
 }
-void check_collisions(game_t *game, projectile_t *projectile) {
-    
+
+void taser_hit(game_t *game, projectile_t *projectile, actor_t *actor){
+    sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "shock"), -1, FALSE, NULL);
+    projectile->lifetime = SHOCK_DURATION;
+    actor_set_state(game, actor, STATE_SHOCK);
+}
+
+bool check_collisions(game_t *game, projectile_t *projectile) {
+    list_for_each(game->actors, actor_t *, actor) {
+        if (actor != projectile->parent && DISTANCESQ(projectile, actor) < PROJECTILE_RADIUS * PROJECTILE_RADIUS) {
+            if (projectile->hit_cb != NULL) {
+                projectile->hit_cb(game, projectile, actor);
+            }
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 int draw_line(game_t *game, projectile_t *projectile, bool trail, int len) {
     bool first = TRUE;
     unsigned int remaining = len;
     int sx, sy, err, e2;
-    int x0 = projectile->x;
-    int y0 = projectile->y;
-    int x1 = projectile->dest_x;
-    int y1 = projectile->dest_y;
-    int dx = ABS(x1 - x0);
-    int dy = ABS(y1 - y0);
-    if (x0 < x1) {
+
+    int dx = ABS(projectile->dest_x - projectile->x);
+    int dy = ABS(projectile->dest_y - projectile->y);
+    if (projectile->x < projectile->dest_x) {
         sx = 1;
     } else {
         sx = -1;
     }
-    if (y0 < y1) {
+    if (projectile->y < projectile->dest_y) {
         sy = 1;
     } else {
         sy = -1;
     }
     err = dx - dy;
-    //printf("\nx0: %d,x1: %d,y0: %d,y1: %d",x0,x1,y0,y1);
     while (TRUE) {
         if (!first) {
             if (trail) {
-                put_renderable(game, projectile, x0, y0);
+                put_renderable(game, projectile, projectile->x, projectile->y);
+            }
+            if (check_collisions(game, projectile)) {
+                projectile->length = 0;
+                return 0;
             }
             --remaining;
         }
         first = FALSE;
-        if (x0 == x1 && y0 == y1) {
+        if (projectile->x == projectile->dest_x && projectile->y == projectile->dest_y) {
             projectile->dest_x += projectile->dest_x - projectile->start_x;
             projectile->dest_y += projectile->dest_y - projectile->start_y;
             break;
@@ -73,11 +90,15 @@ int draw_line(game_t *game, projectile_t *projectile, bool trail, int len) {
         e2 = 2 * err;
         if (e2 > -dy){
             err -= dy;
-            x0 += sx; 
+            projectile->x += sx; 
         }
-        if (x0 == x1 && y0 == y1) {
+        if (projectile->x == projectile->dest_x && projectile->y == projectile->dest_y) {
             if (trail) {
-                put_renderable(game, projectile, x0, y0);
+                put_renderable(game, projectile, projectile->x, projectile->y);
+            }
+            if (check_collisions(game, projectile)) {
+                projectile->length = 0;
+                return 0;
             }
             --remaining;
             projectile->dest_x += projectile->dest_x - projectile->start_x;
@@ -89,11 +110,9 @@ int draw_line(game_t *game, projectile_t *projectile, bool trail, int len) {
         }
         if (e2 < dx){
             err += dx;
-            y0 += sy; 
+            projectile->y += sy; 
         }
     }
-    projectile->x = x0;
-    projectile->y = y0;
     return remaining;
    // loop
      // plot(x0,y0)
@@ -138,8 +157,8 @@ void projectile_step(game_t *game, projectile_t *projectile){
 
 void projectile_free(projectile_t *projectile) {
     int i;
-    if (projectile->parent_ptr != NULL) {
-        *(projectile->parent_ptr) = NULL;
+    if (projectile->parent != NULL) {
+        projectile->parent->projectile = NULL;
     }
     for (i = 0;i < projectile->num_renderables;++i) {
         renderable_free(projectile->renderables[i]);
