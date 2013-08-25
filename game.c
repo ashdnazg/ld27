@@ -16,6 +16,8 @@ game_t * game_new(render_manager_t *r_manager) {
     game->s_manager = sound_manager_new();
     game->t_manager = tween_manager_new();
     game->f_manager = font_manager_new();
+    game->paused = TRUE;
+    game->init = TRUE;
     game->running = TRUE;
     game->steps = 0;
     game->len_timer_caption = 0;
@@ -25,6 +27,7 @@ game_t * game_new(render_manager_t *r_manager) {
     game->animations = asset_manager_new((free_cb_t) animation_free);
     game->samples = asset_manager_new((free_cb_t)sample_free);
     game->actors = list_new(actor_t, actors_link);
+    game->achievements = mem_alloc(sizeof(achievements_t));
     memset(game->key_states, 0, sizeof(game->key_states));
     return game;
 }
@@ -45,6 +48,7 @@ void game_free(game_t *game) {
     list_for_each(game->actors, actor_t *, actor) {
         actor_free(actor);
     }
+    mem_free(game->achievements);
     list_free(game->actors);
     mem_free(game);
 }
@@ -166,24 +170,27 @@ void update_timer(game_t *game) {
 }
 
 void game_step(game_t *game, bool draw) {
-    tween_manager_tween(game->t_manager);
-    render_manager_animate(game->r_manager);
-    if((game->steps % AI_FREQ) == 0) {
-        ai_step(game);
+    if (game->init || !(game->paused)){
+        tween_manager_tween(game->t_manager);
+        render_manager_animate(game->r_manager);
+        if((game->steps % AI_FREQ) == 0) {
+            ai_step(game);
+        }
+        collisions_step(game);
+        list_for_each(game->actors, actor_t *, actor) {
+            actor_step(game, actor);
+        }
+        game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
+        game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
+        game->init = FALSE;
     }
-    collisions_step(game);
-    list_for_each(game->actors, actor_t *, actor) {
-        actor_step(game, actor);
-    }
-    game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
-    game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
     if (draw) {
         game->logo->x = -game->r_manager->x_offset + LOGO_X;
         game->logo->y = -game->r_manager->y_offset + LOGO_Y;
         update_timer(game);
         render_manager_draw(game->r_manager);
     }
-    if(game->player->active){
+    if(!(game->paused) && game->player->active){
         ++(game->steps);
     }
 }
@@ -237,11 +244,12 @@ void game_key_down(game_t *game, SDL_Scancode scan_code) {
         case SDL_SCANCODE_RIGHT:
         case SDL_SCANCODE_LEFT:
         case SDL_SCANCODE_SPACE:
+            game->paused = FALSE;
             update_player_state(game);
             break;
-        case SDL_SCANCODE_P:
-            printf("\nx: %d,y:%d", game->player->x, game->player->y);
-            break;
+        // case SDL_SCANCODE_P:
+            // printf("\nx: %d,y:%d", game->player->x, game->player->y);
+            // break;
         default: break;
     }
 }

@@ -34,6 +34,18 @@ typedef struct game_s game_t;
 #define LOGO_X 260
 #define LOGO_Y 210
 
+typedef struct achievements_s {
+    bool bump_baddies;
+    bool tackle_baddy;
+    bool wiggled;
+    bool injured_red;
+    bool injured_blue;
+    bool injured_police;
+    bool tased_baddy;
+    bool tased_police;
+    bool survived;
+} achievements_t;
+
 struct game_s {
     render_manager_t *r_manager;
     sound_manager_t *s_manager;
@@ -42,11 +54,14 @@ struct game_s {
     asset_manager_t *sprites;
     asset_manager_t *animations;
     asset_manager_t *samples;
+    achievements_t *achievements;
     list_t *actors;
     actor_t *player;
     renderable_t **timer_caption;
     renderable_t *logo;
     unsigned int len_timer_caption;
+    bool init;
+    bool paused;
     bool running;
     bool key_states[SDL_NUM_SCANCODES] ;
     int steps;
