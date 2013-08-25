@@ -14,18 +14,23 @@ typedef struct game_s game_t;
 #include "sound.h"
 #include "macros.h"
 #include "tween.h"
+#include "font.h"
 #include <SDL2/SDL.h>
 
+#define MAX_SCORE_LEN 10
 
 struct game_s {
     render_manager_t *r_manager;
     sound_manager_t *s_manager;
     tween_manager_t *t_manager;
+    font_manager_t *f_manager;
     asset_manager_t *sprites;
     asset_manager_t *animations;
     asset_manager_t *samples;
     list_t *actors;
     actor_t *player;
+    renderable_t **timer_caption;
+    unsigned int len_timer_caption;
     bool running;
     bool key_states[SDL_NUM_SCANCODES] ;
     int steps;

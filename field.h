@@ -11,7 +11,7 @@ extern "C" {
 #define ROW_HEIGHT 6
 #define NUM_ROWS 75
 #define MAX_COLS 24
-#define FIELD_DEPTH -100
+#define FIELD_DEPTH -1000
 
 void init_field(game_t *game, int first_x, int first_y);
 

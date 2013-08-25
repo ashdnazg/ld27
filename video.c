@@ -226,7 +226,7 @@ sprite_t * load_sprite(render_manager_t *r_manager, const char * path) {
 }
 
 sprite_t ** load_sprite_sheet(render_manager_t *r_manager, const char * path, 
-                        int spr_width, int spr_height, int padding, int *out_num_sprites) {
+                        int spr_width, int spr_height, int padding, unsigned int *out_num_sprites) {
     SDL_Texture *texture = NULL;
     sprite_t ** sprites = NULL;
     int num_rows, num_cols, texture_width, texture_height, i;

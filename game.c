@@ -16,8 +16,11 @@ game_t * game_new(render_manager_t *r_manager) {
     game->r_manager = r_manager;
     game->s_manager = sound_manager_new();
     game->t_manager = tween_manager_new();
+    game->f_manager = font_manager_new();
     game->running = TRUE;
     game->steps = 0;
+    game->len_timer_caption = 0;
+    game->timer_caption = NULL;
     game->sprites = asset_manager_new((free_cb_t) sprite_free);
     game->animations = asset_manager_new((free_cb_t) animation_free);
     game->samples = asset_manager_new((free_cb_t)sample_free);
@@ -29,10 +32,13 @@ game_t * game_new(render_manager_t *r_manager) {
 void game_free(game_t *game) {
     sound_manager_free(game->s_manager);
     tween_manager_free(game->t_manager);
+    font_manager_free(game->f_manager);
     asset_manager_free(game->sprites);
     asset_manager_free(game->animations);
     asset_manager_free(game->samples);
-    
+    if (game->timer_caption != NULL){
+        mem_free(game->timer_caption);
+    }
     list_for_each(game->actors, actor_t *, actor) {
         actor_free(actor);
     }
@@ -70,6 +76,64 @@ void collisions_step(game_t *game) {
     }
 }
 
+void update_timer(game_t *game) {
+    int i;
+    int temp;
+    int len;
+    char score_str[MAX_SCORE_LEN + 2];
+    char flipped_str[MAX_SCORE_LEN + 1];
+    if (game->timer_caption != NULL) {
+        for(i = 0;i < game->len_timer_caption;++i) {
+            renderable_free(game->timer_caption[i]);
+        }
+        mem_free(game->timer_caption);
+        game->timer_caption = NULL;
+    }
+    temp = (game->steps * STEP_INTERVAL) / 10;
+    for (i = 0;i < MAX_SCORE_LEN;++i) {
+        if (temp == 0){
+            break;
+        }
+        flipped_str[i] = temp % 10 + 48;
+        temp /= 10;
+    }
+    flipped_str[i] = 0;
+    len = i;
+    if (len > 2) {
+        score_str[len + 1] = 0;
+        score_str[len] = flipped_str[0];
+        score_str[len - 1] = flipped_str[1];
+        score_str[len - 2] = '.';
+        for (i = 2;i < len;++i) {
+            score_str[len - 1 - i] = flipped_str[i];
+        }
+        game->len_timer_caption = len + 1;
+    } else if (len == 2) {
+        score_str[4] = 0;
+        score_str[3] = flipped_str[0];
+        score_str[2] = flipped_str[1];
+        score_str[1] = '.';
+        score_str[0] = '0';
+        game->len_timer_caption = 4;
+    } else if (len == 1) {
+        score_str[4] = 0;
+        score_str[3] = flipped_str[0];
+        score_str[2] = '0';
+        score_str[1] = '.';
+        score_str[0] = '0';
+        game->len_timer_caption = 4;
+    } else {
+        score_str[4] = 0;
+        score_str[3] = '0';
+        score_str[2] = '0';
+        score_str[1] = '.';
+        score_str[0] = '0';
+        game->len_timer_caption = 4;
+    }
+    game->timer_caption = font_manager_print(game, game->f_manager, score_str, 10 - game->r_manager->x_offset, 10 - game->r_manager->y_offset, MAX_SCORE_LEN + 1);
+
+}
+
 void game_step(game_t *game, bool draw) {
     render_manager_animate(game->r_manager);
     tween_manager_tween(game->t_manager);
@@ -83,9 +147,12 @@ void game_step(game_t *game, bool draw) {
     game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
     game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
     if (draw) {
+        update_timer(game);
         render_manager_draw(game->r_manager);
     }
-    ++(game->steps);
+    if(game->player->active){
+        ++(game->steps);
+    }
 }
 
 void update_player_state(game_t *game) {

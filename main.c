@@ -3,6 +3,7 @@
 #include "sound.h"
 #include "tween.h"
 #include "game.h"
+#include "font.h"
 #include "mem_wrap.h"
 #include "macros.h"
 #include "tween.h"
@@ -363,6 +364,9 @@ void load_assets(game_t *game){
     sprites[2] = asset_manager_get(game->sprites, "bplayer_jump_e02");
     asset_manager_add(game->animations, animation_new(sprites, 3), "bplayer_jump_e");
     
+    
+    
+    font_manager_load_font(game, game->f_manager, ASSETS_DIR "font.png", 8, 8);
     
     
     asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "ambient.wav"), "ambient");
