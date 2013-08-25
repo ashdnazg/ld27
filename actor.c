@@ -277,7 +277,7 @@ void actor_step(game_t *game, actor_t *actor) {
         case STATE_AIM:
             if (actor->state_duration == TASE_MOMENT) {
                 actor->projectile = projectile_new(game, asset_manager_get(game->sprites, "taser_projectile"), actor->x, actor->y,
-                                                     game->player->x, game->player->y, 10, TRUE, (void **) &(actor->projectile));
+                                                     game->player->x, game->player->y, 40, 200, 20, TRUE, (void **) &(actor->projectile));
             }
             break;
         case STATE_WIGGLE: break;
