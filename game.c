@@ -52,34 +52,39 @@ void game_free(game_t *game) {
 void game_init(game_t *game) {
     render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "field"), FIELD_X, FIELD_Y, FIELD_DEPTH);
     game->player = actor_new(game, ACTOR_TYPE_STREAKER, 1016, 1232, DIRECTION_N, NO_AI);
-    // actor_new(game, ACTOR_TYPE_SECURITY, 1205,1060, DIRECTION_S, ai_security_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_SECURITY, 874, 1360, DIRECTION_S, ai_security_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_SECURITY, 736,650, DIRECTION_S, ai_security_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_SECURITY, 380,966, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 1205,1060, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 874, 1360, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 736,650, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, 380,966, DIRECTION_S, ai_security_cb, NULL);
     
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,911, 1025,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,873, 953 ,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,779, 945 ,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,940, 794 ,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1034,914 , DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1192,972 ,DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1209,861 , DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1072,748 , DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,972, 594 ,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,836, 666 , DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1222,622 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_POLICE, 1444,  728, DIRECTION_S, ai_police_cb, NULL);
+    actor_new(game, ACTOR_TYPE_POLICE, 1095,  413, DIRECTION_S, ai_police_cb, NULL);
+    actor_new(game, ACTOR_TYPE_POLICE, 92,   1286, DIRECTION_S, ai_police_cb, NULL);
+    actor_new(game, ACTOR_TYPE_POLICE, 518,  1648, DIRECTION_S, ai_police_cb, NULL);
     
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,794,1090,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,705,1037,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,508,1014,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,550,1160,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,643,1231, DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,796,1284,DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,673,1449, DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,539,1391, DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,442,1226,  DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,344,1122, DIRECTION_S, ai_player_cb, NULL);
-    // actor_new(game, ACTOR_TYPE_RED_PLAYER,366,1408, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,911, 1025,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,873, 953 ,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,779, 945 ,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,940, 794 ,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1034,914 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1192,972 ,DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1209,861 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1072,748 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,972, 594 ,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,836, 666 , DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1222,622 , DIRECTION_S, ai_player_cb, NULL);
+    
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,794,1090,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,705,1037,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,508,1014,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,550,1160,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,643,1231, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,796,1284,DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,673,1449, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,539,1391, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,442,1226,  DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,344,1122, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER,366,1408, DIRECTION_S, ai_player_cb, NULL);
     
     game->logo = render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "logo"), 0, 0, 1000);
     sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "ambient"), 20, TRUE, NULL);
