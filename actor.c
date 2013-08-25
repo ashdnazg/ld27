@@ -6,6 +6,7 @@
 #include "macros.h"
 #include "mem_wrap.h"
 #include <stdio.h>
+#include <assert.h>
 
 char * actor_get_graphics_name(actor_t *actor, actor_state_t state) {
     char *result = mem_alloc(256);
@@ -26,8 +27,11 @@ char * actor_get_graphics_name(actor_t *actor, actor_state_t state) {
         case ACTOR_TYPE_POLICE:
             type_str = POLICE_STR;
             break;
-        case ACTOR_TYPE_PLAYERS:
-            type_str = PLAYERS_STR;
+        case ACTOR_TYPE_BLUE_PLAYER:
+            type_str = BLUE_PLAYER_STR;
+            break;
+        case ACTOR_TYPE_RED_PLAYER:
+            type_str = RED_PLAYER_STR;
             break;
         case ACTOR_TYPE_JUDGE:
             type_str = JUDGE_STR;
@@ -62,17 +66,21 @@ char * actor_get_graphics_name(actor_t *actor, actor_state_t state) {
     
     
     switch(actor->direction) {
-        case DIRECTION_NW:
         case DIRECTION_N:
-        case DIRECTION_NE:
             dir_str = "n";
             break;
+        case DIRECTION_NE:
         case DIRECTION_E:
         case DIRECTION_SE:
+            dir_str = "e";
+            break;
         case DIRECTION_S:
+            dir_str = "s";
+            break;
+        case DIRECTION_NW:
         case DIRECTION_SW:
         case DIRECTION_W:
-            dir_str = "s";
+            dir_str = "w";
             break;
         default:
             printf("\ndirection error: %d", actor->direction);
@@ -113,7 +121,7 @@ void actor_set_state(game_t *game, actor_t *actor, actor_state_t state) {
                                                         graphics_name), WIGGLE_INTERVAL, TRUE);
             mem_free(graphics_name);
             if (actor->voice == NULL) {
-                actor->voice = sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "wiggle"), -1, TRUE);
+                actor->voice = sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "wiggle"), -1, TRUE, (void **) &(actor->voice));
             }
             break;
         case STATE_JUMP:
@@ -135,8 +143,10 @@ void actor_set_pos(actor_t *actor, int x, int y) {
     actor->renderable->y = y / 3 - ACTOR_HEIGHT / 2;
 }
 void actor_set_dir(game_t *game, actor_t *actor, actor_direction_t direction) {
-    actor->direction = direction;
-    actor_set_state(game, actor, actor->state);
+    if (direction != 0) {
+        actor->direction = direction;
+        actor_set_state(game, actor, actor->state);
+    }
 }
 actor_t * actor_new(game_t *game, actor_type_t type, int x, int y, actor_direction_t direction, ai_cb_t ai_cb, void *ai_params) {
     actor_t *actor = mem_alloc(sizeof(actor_t));
@@ -156,6 +166,9 @@ actor_t * actor_new(game_t *game, actor_type_t type, int x, int y, actor_directi
 }
 
 void actor_free(actor_t *actor) {
+    if (actor->voice != NULL) {
+        sample_playback_free(actor->voice);
+    }
     link_remove_from_list(&(actor->actors_link));
     renderable_free(actor->renderable);
     mem_free(actor);
@@ -195,8 +208,32 @@ void actor_move(game_t *game, actor_t *actor) {
                   actor->y + ((actor->direction & BIT_S) ? 1 : ((actor->direction & BIT_N) ? -1 : 0)) * (actor->direction & (BIT_W | BIT_E) ? 1 : 2));
 }
 
-void actor_step(game_t *game, actor_t *actor) {
+void actor_collide(game_t *game, actor_t *actor, actor_t *other) {
+    int direction;
+    if (DISTANCESQ(actor, other) < COLLISION_RADIUS * COLLISION_RADIUS) {
+        if (actor->state == STATE_JUMP && other->state != STATE_JUMP) {
+            if (actor->state_duration > 0) {
+                actor_set_dir(game, other, actor->direction);
+                actor_set_state(game, other, STATE_JUMP);
+            } else {
+                actor_set_state(game, other, STATE_JUMP);
+            }
+            sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "bump"), -1, FALSE, NULL);
+        } else if (actor->state != STATE_JUMP && other->state != STATE_JUMP) {
+            direction = get_direction(actor->x, actor->y, other->x, other->y);
+            assert(direction != 0);
+            actor_set_dir(game, other, direction);
+            actor_set_state(game, other, STATE_JUMP);
+            direction = get_direction(other->x, other->y, actor->x, actor->y);
+            assert(direction != 0);
+            actor_set_dir(game, actor, direction);
+            actor_set_state(game, actor, STATE_JUMP);
+            sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "bump"), -1, FALSE, NULL);
+        }
+    }
+}
 
+void actor_step(game_t *game, actor_t *actor) {
     switch(actor->state) {
         case STATE_STAND: break;
         case STATE_RUN:
@@ -206,9 +243,15 @@ void actor_step(game_t *game, actor_t *actor) {
             if (actor->state_duration > 0) { 
                 actor_move(game, actor);
                 //actor_move(game, actor);
-                --(actor->state_duration);
             }
             break;
         case STATE_WIGGLE: break;
+        default:
+            printf("\nbad state: %d", actor->state);
+            exit(1);
+    }
+    if (actor->state_duration > 0) { 
+        //actor_move(game, actor);
+        --(actor->state_duration);
     }
 }

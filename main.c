@@ -96,6 +96,65 @@ void load_assets(game_t *game){
     sprites[7] = asset_manager_get(game->sprites, "streaker_wiggle_n01");
     asset_manager_add(game->animations, animation_new(sprites, 8), "streaker_wiggle_n");
     
+    //WEST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_run_w00.png"), "streaker_run_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_run_w01.png"), "streaker_run_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_w00.png"), "streaker_wiggle_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_w01.png"), "streaker_wiggle_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_w02.png"), "streaker_wiggle_w02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_w00.png"), "streaker_jump_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_w01.png"), "streaker_jump_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_w02.png"), "streaker_jump_w02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_stand_w.png"), "streaker_stand_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_run_w00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_run_w01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "streaker_run_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_jump_w00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_jump_w01");
+    sprites[2] = asset_manager_get(game->sprites, "streaker_jump_w02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "streaker_jump_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_wiggle_w00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_wiggle_w01");
+    sprites[2] = asset_manager_get(game->sprites, "streaker_wiggle_w00");
+    sprites[3] = asset_manager_get(game->sprites, "streaker_wiggle_w01");
+    sprites[4] = asset_manager_get(game->sprites, "streaker_wiggle_w02");
+    sprites[5] = asset_manager_get(game->sprites, "streaker_wiggle_w01");
+    sprites[6] = asset_manager_get(game->sprites, "streaker_wiggle_w02");
+    sprites[7] = asset_manager_get(game->sprites, "streaker_wiggle_w01");
+    asset_manager_add(game->animations, animation_new(sprites, 8), "streaker_wiggle_w");
+    
+    //EAST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_run_e00.png"), "streaker_run_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_run_e01.png"), "streaker_run_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_e00.png"), "streaker_wiggle_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_e01.png"), "streaker_wiggle_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_wiggle_e02.png"), "streaker_wiggle_e02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_e00.png"), "streaker_jump_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_e01.png"), "streaker_jump_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_jump_e02.png"), "streaker_jump_e02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "streaker_stand_e.png"), "streaker_stand_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_run_e00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_run_e01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "streaker_run_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_jump_e00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_jump_e01");
+    sprites[2] = asset_manager_get(game->sprites, "streaker_jump_e02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "streaker_jump_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "streaker_wiggle_e00");
+    sprites[1] = asset_manager_get(game->sprites, "streaker_wiggle_e01");
+    sprites[2] = asset_manager_get(game->sprites, "streaker_wiggle_e00");
+    sprites[3] = asset_manager_get(game->sprites, "streaker_wiggle_e01");
+    sprites[4] = asset_manager_get(game->sprites, "streaker_wiggle_e02");
+    sprites[5] = asset_manager_get(game->sprites, "streaker_wiggle_e01");
+    sprites[6] = asset_manager_get(game->sprites, "streaker_wiggle_e02");
+    sprites[7] = asset_manager_get(game->sprites, "streaker_wiggle_e01");
+    asset_manager_add(game->animations, animation_new(sprites, 8), "streaker_wiggle_e");
     
     
     //NORTH
@@ -132,9 +191,185 @@ void load_assets(game_t *game){
     sprites[2] = asset_manager_get(game->sprites, "security_jump_s02");
     asset_manager_add(game->animations, animation_new(sprites, 3), "security_jump_s");
     
+    //WEST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_run_w00.png"),    "security_run_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_run_w01.png"),    "security_run_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_jump_w00.png"),   "security_jump_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_jump_w01.png"),   "security_jump_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_jump_w02.png"),   "security_jump_w02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_stand_w.png"),    "security_stand_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "security_run_w00");
+    sprites[1] = asset_manager_get(game->sprites, "security_run_w01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "security_run_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "security_jump_w00");
+    sprites[1] = asset_manager_get(game->sprites, "security_jump_w01");
+    sprites[2] = asset_manager_get(game->sprites, "security_jump_w02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "security_jump_w");
+    
+    //EAST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_run_e00.png"),    "security_run_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_run_e01.png"),    "security_run_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_jump_e00.png"),   "security_jump_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_jump_e01.png"),   "security_jump_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_jump_e02.png"),   "security_jump_e02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "security_stand_e.png"),    "security_stand_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "security_run_e00");
+    sprites[1] = asset_manager_get(game->sprites, "security_run_e01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "security_run_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "security_jump_e00");
+    sprites[1] = asset_manager_get(game->sprites, "security_jump_e01");
+    sprites[2] = asset_manager_get(game->sprites, "security_jump_e02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "security_jump_e");
+    
+    
+    
+    //NORTH
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_run_n00.png"),    "rplayer_run_n00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_run_n01.png"),    "rplayer_run_n01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_n00.png"),   "rplayer_jump_n00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_n01.png"),   "rplayer_jump_n01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_n02.png"),   "rplayer_jump_n02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_stand_n.png"),    "rplayer_stand_n");
+    
+    sprites[0] = asset_manager_get(game->sprites, "rplayer_run_n00");
+    sprites[1] = asset_manager_get(game->sprites, "rplayer_run_n01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "rplayer_run_n");
+    
+    sprites[0] = asset_manager_get(game->sprites, "rplayer_jump_n00");
+    sprites[1] = asset_manager_get(game->sprites, "rplayer_jump_n01");
+    sprites[2] = asset_manager_get(game->sprites, "rplayer_jump_n02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "rplayer_jump_n");
+    
+    //SOUTH
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_run_s00.png"),    "rplayer_run_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_run_s01.png"),    "rplayer_run_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_s00.png"),   "rplayer_jump_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_s01.png"),   "rplayer_jump_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_s02.png"),   "rplayer_jump_s02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_stand_s.png"),    "rplayer_stand_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "rplayer_run_s00");
+    sprites[1] = asset_manager_get(game->sprites, "rplayer_run_s01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "rplayer_run_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "rplayer_jump_s00");
+    sprites[1] = asset_manager_get(game->sprites, "rplayer_jump_s01");
+    sprites[2] = asset_manager_get(game->sprites, "rplayer_jump_s02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "rplayer_jump_s");
+    
+    //WEST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_run_w00.png"),    "rplayer_run_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_run_w01.png"),    "rplayer_run_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_w00.png"),   "rplayer_jump_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_w01.png"),   "rplayer_jump_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_w02.png"),   "rplayer_jump_w02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_stand_w.png"),    "rplayer_stand_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "rplayer_run_w00");
+    sprites[1] = asset_manager_get(game->sprites, "rplayer_run_w01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "rplayer_run_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "rplayer_jump_w00");
+    sprites[1] = asset_manager_get(game->sprites, "rplayer_jump_w01");
+    sprites[2] = asset_manager_get(game->sprites, "rplayer_jump_w02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "rplayer_jump_w");
+    
+    //EAST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_run_e00.png"),    "rplayer_run_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_run_e01.png"),    "rplayer_run_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_e00.png"),   "rplayer_jump_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_e01.png"),   "rplayer_jump_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_jump_e02.png"),   "rplayer_jump_e02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "rplayer_stand_e.png"),    "rplayer_stand_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "rplayer_run_e00");
+    sprites[1] = asset_manager_get(game->sprites, "rplayer_run_e01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "rplayer_run_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "rplayer_jump_e00");
+    sprites[1] = asset_manager_get(game->sprites, "rplayer_jump_e01");
+    sprites[2] = asset_manager_get(game->sprites, "rplayer_jump_e02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "rplayer_jump_e");
+    
+    //NORTH
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_run_n00.png"),    "bplayer_run_n00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_run_n01.png"),    "bplayer_run_n01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_n00.png"),   "bplayer_jump_n00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_n01.png"),   "bplayer_jump_n01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_n02.png"),   "bplayer_jump_n02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_stand_n.png"),    "bplayer_stand_n");
+    
+    sprites[0] = asset_manager_get(game->sprites, "bplayer_run_n00");
+    sprites[1] = asset_manager_get(game->sprites, "bplayer_run_n01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "bplayer_run_n");
+    
+    sprites[0] = asset_manager_get(game->sprites, "bplayer_jump_n00");
+    sprites[1] = asset_manager_get(game->sprites, "bplayer_jump_n01");
+    sprites[2] = asset_manager_get(game->sprites, "bplayer_jump_n02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "bplayer_jump_n");
+    
+    //SOUTH
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_run_s00.png"),    "bplayer_run_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_run_s01.png"),    "bplayer_run_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_s00.png"),   "bplayer_jump_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_s01.png"),   "bplayer_jump_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_s02.png"),   "bplayer_jump_s02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_stand_s.png"),    "bplayer_stand_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "bplayer_run_s00");
+    sprites[1] = asset_manager_get(game->sprites, "bplayer_run_s01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "bplayer_run_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "bplayer_jump_s00");
+    sprites[1] = asset_manager_get(game->sprites, "bplayer_jump_s01");
+    sprites[2] = asset_manager_get(game->sprites, "bplayer_jump_s02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "bplayer_jump_s");
+    
+    //WEST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_run_w00.png"),    "bplayer_run_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_run_w01.png"),    "bplayer_run_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_w00.png"),   "bplayer_jump_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_w01.png"),   "bplayer_jump_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_w02.png"),   "bplayer_jump_w02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_stand_w.png"),    "bplayer_stand_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "bplayer_run_w00");
+    sprites[1] = asset_manager_get(game->sprites, "bplayer_run_w01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "bplayer_run_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "bplayer_jump_w00");
+    sprites[1] = asset_manager_get(game->sprites, "bplayer_jump_w01");
+    sprites[2] = asset_manager_get(game->sprites, "bplayer_jump_w02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "bplayer_jump_w");
+    
+    //EAST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_run_e00.png"),    "bplayer_run_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_run_e01.png"),    "bplayer_run_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_e00.png"),   "bplayer_jump_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_e01.png"),   "bplayer_jump_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_jump_e02.png"),   "bplayer_jump_e02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "bplayer_stand_e.png"),    "bplayer_stand_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "bplayer_run_e00");
+    sprites[1] = asset_manager_get(game->sprites, "bplayer_run_e01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "bplayer_run_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "bplayer_jump_e00");
+    sprites[1] = asset_manager_get(game->sprites, "bplayer_jump_e01");
+    sprites[2] = asset_manager_get(game->sprites, "bplayer_jump_e02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "bplayer_jump_e");
+    
+    
     
     asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "ambient.wav"), "ambient");
     asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "wiggle.wav"), "wiggle");
+    asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "bump.wav"), "bump");
+    asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "getaway.wav"), "getaway");
+    asset_manager_add(game->samples, load_sample(game->s_manager, ASSETS_DIR "jump.wav"), "jump");
     
     mem_free(sprites);
 }

@@ -15,6 +15,10 @@ typedef struct actor_s actor_t;
 #define ACTOR_WIDTH 5
 #define ACTOR_HEIGHT 6
 
+#define COLLISION_RADIUS 7
+
+#define DISTANCESQ(actor_a,actor_b) (((actor_a)->x - (actor_b->x)) * ((actor_a)->x - (actor_b->x)) + ((actor_a)->y - (actor_b->y)) * ((actor_a)->y - (actor_b->y)))
+
 #define RUN_INTERVAL 5
 #define WIGGLE_INTERVAL 5
 #define JUMP_INTERVAL 5
@@ -42,14 +46,16 @@ typedef enum actor_type_e {
     ACTOR_TYPE_STREAKER,
     ACTOR_TYPE_SECURITY,
     ACTOR_TYPE_POLICE,
-    ACTOR_TYPE_PLAYERS,
+    ACTOR_TYPE_BLUE_PLAYER,
+    ACTOR_TYPE_RED_PLAYER,
     ACTOR_TYPE_JUDGE,
 } actor_type_t;
 
 #define STREAKER_STR "streaker"
 #define SECURITY_STR "security"
 #define POLICE_STR "police"
-#define PLAYERS_STR "players"
+#define BLUE_PLAYER_STR "bplayer"
+#define RED_PLAYER_STR "rplayer"
 #define JUDGE_STR "judge"
 
 
@@ -57,6 +63,10 @@ typedef enum actor_type_e {
 #define BIT_E (1 << 1)
 #define BIT_S (1 << 2)
 #define BIT_W (1 << 3)
+
+#define DIRECTION_MASK 15
+#define DIRECTION_BITS 4
+
 
 typedef void (*ai_cb_t)(game_t *game, actor_t *actor);
 
@@ -96,6 +106,7 @@ void actor_set_pos(actor_t *actor, int x, int y);
 void actor_set_dir(game_t *game, actor_t *actor, actor_direction_t direction);
 
 void actor_step(game_t *game, actor_t *actor);
+void actor_collide(game_t *game, actor_t *actor, actor_t *other);
 actor_direction_t get_direction(int x1, int y1, int x2, int y2);
 
 #ifdef __cplusplus

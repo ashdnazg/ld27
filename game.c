@@ -44,15 +44,28 @@ void game_init(game_t *game) {
     init_field(game, 300, 0);
     game->player = actor_new(game, ACTOR_TYPE_STREAKER, 100, 500, DIRECTION_S, NO_AI);
     actor_new(game, ACTOR_TYPE_SECURITY, 600, 600, DIRECTION_S, ai_security_cb, NULL);
-    actor_new(game, ACTOR_TYPE_SECURITY, -300, 1200, DIRECTION_S, ai_security_cb, NULL);
+    actor_new(game, ACTOR_TYPE_SECURITY, -200, 1200, DIRECTION_S, ai_security_cb, NULL);
     actor_new(game, ACTOR_TYPE_SECURITY, 200, 400, DIRECTION_S, ai_security_cb, NULL);
-    sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "ambient"), 20, TRUE);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER, 200, 700, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_RED_PLAYER, -300, 1000, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER, -100, 800, DIRECTION_S, ai_player_cb, NULL);
+    actor_new(game, ACTOR_TYPE_BLUE_PLAYER, 400, 600, DIRECTION_S, ai_player_cb, NULL);
+    sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "ambient"), 20, TRUE, NULL);
 }
 
 void ai_step(game_t *game) {
     list_for_each(game->actors, actor_t *, actor) {
         if (actor->ai_cb != NULL){
             actor->ai_cb(game, actor);
+        }
+    }
+}
+void collisions_step(game_t *game) {
+    list_for_each(game->actors, actor_t *, actor) {
+        list_for_each(game->actors, actor_t *, other) {
+            if (actor != other){
+                actor_collide(game, actor, other);
+            }
         }
     }
 }
@@ -63,6 +76,7 @@ void game_step(game_t *game, bool draw) {
     if((game->steps % AI_FREQ) == 0) {
         ai_step(game);
     }
+    collisions_step(game);
     list_for_each(game->actors, actor_t *, actor) {
         actor_step(game, actor);
     }
@@ -76,6 +90,9 @@ void game_step(game_t *game, bool draw) {
 
 void update_player_state(game_t *game) {
     int direction = 0;
+    if (!(game->player->active)) {
+        return;
+    }
     // Make sure they're not pressing up and down (or left and right) at the same time.
     if ((!(game->key_states[SDL_SCANCODE_UP]) || !(game->key_states[SDL_SCANCODE_DOWN])) &&
         (!(game->key_states[SDL_SCANCODE_LEFT]) || !(game->key_states[SDL_SCANCODE_RIGHT]))) {
