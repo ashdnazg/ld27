@@ -76,3 +76,32 @@ void ai_player_cb(game_t *game, actor_t *actor) {
         }
     }
 }
+
+void ai_police_cb(game_t *game, actor_t *actor) {
+    int new_direction = 0;
+    int collision_direction;
+    int i;
+    if(!(actor->active)) {
+        return;
+    }
+    if (DISTANCESQ(actor,game->player) < TASE_THRESHOLD * TASE_THRESHOLD) {
+        actor_set_state(game, actor, STATE_AIM);
+    }
+    new_direction = get_direction(actor->x, actor->y, game->player->x, game->player->y);
+    list_for_each(game->actors, actor_t *, other){
+        if (actor != other && other != game->player && other->active && DISTANCESQ(actor,other) < CLOSE_THRESHOLD * 2) {
+            collision_direction = get_direction(other->x, other->y, actor->x, actor->y);
+            new_direction = collision_direction;
+        }
+    }
+    if (new_direction == 0) {
+        actor_set_state(game, actor, STATE_STAND);
+    } else {
+        if (new_direction != actor->direction) {
+            actor_set_dir(game, actor, new_direction);
+        }
+        if (actor->state == STATE_STAND) {
+            actor_set_state(game, actor, STATE_RUN);
+        }
+    }
+}

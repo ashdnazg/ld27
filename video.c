@@ -43,7 +43,7 @@ void animation_playback_animate(animation_playback_t * playback) {
 
 renderable_t * renderable_new(sprite_t *default_sprite, int x, int y, int depth) {
     renderable_t *renderable = mem_alloc(sizeof(renderable_t));
-    renderable->tweens = list_new(tween_t, tweens_link)
+    renderable->tweens = list_new(tween_t, tweens_link);
     renderable->sprite = default_sprite;
     renderable->default_sprite = default_sprite;
     renderable->x = x;

@@ -22,6 +22,15 @@ typedef struct game_s game_t;
 #define FIELD_Y 0
 #define FIELD_DEPTH -1000
 
+#define FIELD_W_X 40
+#define FIELD_W_Y 1270
+#define FIELD_N_X 1070
+#define FIELD_N_Y 350
+#define FIELD_E_X 1540
+#define FIELD_E_Y 770
+#define FIELD_S_X 510
+#define FIELD_S_Y 1690
+
 #define LOGO_X 260
 #define LOGO_Y 210
 
@@ -53,6 +62,8 @@ void game_init(game_t *game);
 
 void game_key_down(game_t *game, SDL_Scancode scan_code);
 void game_key_up(game_t *game, SDL_Scancode scan_code);
+
+bool inside_field(int x, int y);
 #ifdef __cplusplus
 }
 #endif

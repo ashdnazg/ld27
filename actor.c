@@ -1,4 +1,5 @@
 #include "actor.h"
+#include "projectile.h"
 #include "sound.h"
 #include "game.h"
 #include "video.h"
@@ -36,6 +37,9 @@ char * actor_get_graphics_name(actor_t *actor, actor_state_t state) {
         case ACTOR_TYPE_JUDGE:
             type_str = JUDGE_STR;
             break;
+        default:
+            printf("\nactor type error: %d", actor->direction);
+            exit(1);
     }
     
     len = strlen(type_str);
@@ -57,6 +61,12 @@ char * actor_get_graphics_name(actor_t *actor, actor_state_t state) {
         case STATE_JUMP:
             state_str = JUMP_STR;
             break;
+        case STATE_AIM:
+            state_str = AIM_STR;
+            break;
+        default:
+            printf("\nstate error: %d", actor->direction);
+            exit(1);
     }
     len = strlen(state_str);
     memcpy(result_ptr, state_str, len);
@@ -116,21 +126,30 @@ void actor_set_state(game_t *game, actor_t *actor, actor_state_t state) {
             mem_free(graphics_name);
             break;
         case STATE_WIGGLE:
-                graphics_name = actor_get_graphics_name(actor, STATE_WIGGLE);
-                render_manager_play_animation(game->r_manager,  actor->renderable, asset_manager_get(game->animations, 
-                                                        graphics_name), WIGGLE_INTERVAL, TRUE);
+            graphics_name = actor_get_graphics_name(actor, STATE_WIGGLE);
+            render_manager_play_animation(game->r_manager,  actor->renderable, asset_manager_get(game->animations, 
+                                                    graphics_name), WIGGLE_INTERVAL, TRUE);
             mem_free(graphics_name);
             if (actor->voice == NULL) {
                 actor->voice = sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "wiggle"), -1, TRUE, (void **) &(actor->voice));
             }
             break;
         case STATE_JUMP:
-                graphics_name = actor_get_graphics_name(actor, STATE_JUMP);
-                render_manager_play_animation(game->r_manager,  actor->renderable, asset_manager_get(game->animations, 
-                                                        graphics_name), JUMP_INTERVAL, FALSE);
-                actor->renderable->default_sprite = actor->renderable->animation_playback->animation->frames[actor->renderable->animation_playback->animation->num_frames - 1];
-                actor->active = FALSE;
-                actor->state_duration = JUMP_DURATION;
+            graphics_name = actor_get_graphics_name(actor, STATE_JUMP);
+            render_manager_play_animation(game->r_manager,  actor->renderable, asset_manager_get(game->animations, 
+                                                    graphics_name), JUMP_INTERVAL, FALSE);
+            actor->renderable->default_sprite = actor->renderable->animation_playback->animation->frames[actor->renderable->animation_playback->animation->num_frames - 1];
+            actor->active = FALSE;
+            actor->state_duration = JUMP_DURATION;
+            mem_free(graphics_name);
+            break;
+        case STATE_AIM:
+            graphics_name = actor_get_graphics_name(actor, STATE_AIM);
+            render_manager_play_animation(game->r_manager,  actor->renderable, asset_manager_get(game->animations, 
+                                                    graphics_name), AIM_INTERVAL, FALSE);
+            actor->renderable->default_sprite = actor->renderable->animation_playback->animation->frames[actor->renderable->animation_playback->animation->num_frames - 1];
+            actor->active = FALSE;
+            actor->state_duration = AIM_DURATION;
             mem_free(graphics_name);
             break;
     }
@@ -154,6 +173,7 @@ actor_t * actor_new(game_t *game, actor_type_t type, int x, int y, actor_directi
     actor->state = STATE_STAND;
     actor->type = type;
     actor->voice = NULL;
+    actor->projectile = NULL;
     actor->active = TRUE;
     actor->state_duration = 0;
     actor->ai_cb = ai_cb;
@@ -168,6 +188,9 @@ actor_t * actor_new(game_t *game, actor_type_t type, int x, int y, actor_directi
 void actor_free(actor_t *actor) {
     if (actor->voice != NULL) {
         sample_playback_free(actor->voice);
+    }
+    if (actor->projectile != NULL) {
+        projectile_free(actor->projectile);
     }
     link_remove_from_list(&(actor->actors_link));
     renderable_free(actor->renderable);
@@ -204,8 +227,14 @@ actor_direction_t get_direction(int x1, int y1, int x2, int y2) {
 }
 
 void actor_move(game_t *game, actor_t *actor) {
-    actor_set_pos(actor, actor->x + ((actor->direction & BIT_E) ? 1 : ((actor->direction & BIT_W) ? -1 : 0)) * (actor->direction & (BIT_N | BIT_S) ? 1 : 2) ,
-                  actor->y + ((actor->direction & BIT_S) ? 1 : ((actor->direction & BIT_N) ? -1 : 0)) * (actor->direction & (BIT_W | BIT_E) ? 1 : 2));
+    int temp_direction;
+    int new_x = actor->x + ((actor->direction & BIT_E) ? 1 : ((actor->direction & BIT_W) ? -1 : 0)) * (actor->direction & (BIT_N | BIT_S) ? 1 : 2);
+    int new_y = actor->y + ((actor->direction & BIT_S) ? 1 : ((actor->direction & BIT_N) ? -1 : 0)) * (actor->direction & (BIT_W | BIT_E) ? 1 : 2);
+    if (!inside_field(new_x, new_y)) {
+        new_x = actor->x;
+        new_y = actor->y;
+    }
+    actor_set_pos(actor,  new_x, new_y);
 }
 
 void actor_collide(game_t *game, actor_t *actor, actor_t *other) {
@@ -245,6 +274,12 @@ void actor_step(game_t *game, actor_t *actor) {
                 //actor_move(game, actor);
             }
             break;
+        case STATE_AIM:
+            if (actor->state_duration == TASE_MOMENT) {
+                actor->projectile = projectile_new(game, asset_manager_get(game->sprites, "taser_projectile"), actor->x, actor->y,
+                                                     game->player->x, game->player->y, 10, TRUE, (void **) &(actor->projectile));
+            }
+            break;
         case STATE_WIGGLE: break;
         default:
             printf("\nbad state: %d", actor->state);
@@ -253,5 +288,8 @@ void actor_step(game_t *game, actor_t *actor) {
     if (actor->state_duration > 0) { 
         //actor_move(game, actor);
         --(actor->state_duration);
+    }
+    if (actor->projectile != NULL) {
+        projectile_step(game, actor->projectile);
     }
 }

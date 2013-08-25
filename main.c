@@ -37,6 +37,7 @@ void load_assets(game_t *game){
     
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "field.png"), "field");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "logo.png"), "logo");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "taser_projectile.png"), "taser_projectile");
     
     
     //SOUTH
