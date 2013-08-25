@@ -369,7 +369,101 @@ void load_assets(game_t *game){
     sprites[2] = asset_manager_get(game->sprites, "bplayer_jump_e02");
     asset_manager_add(game->animations, animation_new(sprites, 3), "bplayer_jump_e");
     
+        //NORTH
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_run_n00.png"),    "police_run_n00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_run_n01.png"),    "police_run_n01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_n00.png"),   "police_jump_n00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_n01.png"),   "police_jump_n01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_n02.png"),   "police_jump_n02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_aim_n00.png"),    "police_aim_n00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_aim_n01.png"),    "police_aim_n01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_stand_n.png"),    "police_stand_n");
     
+    sprites[0] = asset_manager_get(game->sprites, "police_run_n00");
+    sprites[1] = asset_manager_get(game->sprites, "police_run_n01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "police_run_n");
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_jump_n00");
+    sprites[1] = asset_manager_get(game->sprites, "police_jump_n01");
+    sprites[2] = asset_manager_get(game->sprites, "police_jump_n02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "police_jump_n");
+    
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_aim_n00");
+    sprites[1] = asset_manager_get(game->sprites, "police_aim_n01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "police_aim_n");
+    
+    //SOUTH
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_run_s00.png"),    "police_run_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_run_s01.png"),    "police_run_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_s00.png"),   "police_jump_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_s01.png"),   "police_jump_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_s02.png"),   "police_jump_s02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_aim_s00.png"),    "police_aim_s00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_aim_s01.png"),    "police_aim_s01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_stand_s.png"),    "police_stand_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_run_s00");
+    sprites[1] = asset_manager_get(game->sprites, "police_run_s01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "police_run_s");
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_jump_s00");
+    sprites[1] = asset_manager_get(game->sprites, "police_jump_s01");
+    sprites[2] = asset_manager_get(game->sprites, "police_jump_s02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "police_jump_s");
+    
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_aim_s00");
+    sprites[1] = asset_manager_get(game->sprites, "police_aim_s01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "police_aim_s");
+    
+    //WEST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_run_w00.png"),    "police_run_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_run_w01.png"),    "police_run_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_w00.png"),   "police_jump_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_w01.png"),   "police_jump_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_w02.png"),   "police_jump_w02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_aim_w00.png"),    "police_aim_w00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_aim_w01.png"),    "police_aim_w01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_stand_w.png"),    "police_stand_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_run_w00");
+    sprites[1] = asset_manager_get(game->sprites, "police_run_w01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "police_run_w");
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_jump_w00");
+    sprites[1] = asset_manager_get(game->sprites, "police_jump_w01");
+    sprites[2] = asset_manager_get(game->sprites, "police_jump_w02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "police_jump_w");
+    
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_aim_w00");
+    sprites[1] = asset_manager_get(game->sprites, "police_aim_w01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "police_aim_w");
+    
+    //EAST
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_run_e00.png"),    "police_run_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_run_e01.png"),    "police_run_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_e00.png"),   "police_jump_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_e01.png"),   "police_jump_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_jump_e02.png"),   "police_jump_e02");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_aim_e00.png"),    "police_aim_e00");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_aim_e01.png"),    "police_aim_e01");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "police_stand_e.png"),    "police_stand_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_run_e00");
+    sprites[1] = asset_manager_get(game->sprites, "police_run_e01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "police_run_e");
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_jump_e00");
+    sprites[1] = asset_manager_get(game->sprites, "police_jump_e01");
+    sprites[2] = asset_manager_get(game->sprites, "police_jump_e02");
+    asset_manager_add(game->animations, animation_new(sprites, 3), "police_jump_e");
+    
+    
+    sprites[0] = asset_manager_get(game->sprites, "police_aim_e00");
+    sprites[1] = asset_manager_get(game->sprites, "police_aim_e01");
+    asset_manager_add(game->animations, animation_new(sprites, 2), "police_aim_e");
     
     font_manager_load_font(game, game->f_manager, ASSETS_DIR "font.png", 8, 8);
     

@@ -49,7 +49,12 @@ void ai_player_cb(game_t *game, actor_t *actor) {
         if (actor->voice == NULL) {
             actor->voice = sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "getaway"), -1, FALSE, (void **) &(actor->voice));
         }
-    } else {
+    } else if (game->player->state == STATE_WIGGLE && DISTANCESQ(actor, game->player) < HORROR_THRESHOLD * HORROR_THRESHOLD) {
+        new_direction = get_direction(game->player->x, game->player->y, actor->x, actor->y);
+        if (actor->voice == NULL) {
+            actor->voice = sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "getaway"), -1, FALSE, (void **) &(actor->voice));
+        }
+    } else{
         list_for_each(game->actors, actor_t *, other){
             if (actor != other && other != game->player && other->active && DISTANCESQ(actor,other) < CLOSE_THRESHOLD * CLOSE_THRESHOLD) {
                 new_direction = get_direction(other->x, other->y, actor->x, actor->y);

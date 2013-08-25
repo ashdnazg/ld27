@@ -11,6 +11,7 @@ extern "C" {
 
 #define CLOSE_THRESHOLD 20
 #define JUMP_THRESHOLD 12
+#define HORROR_THRESHOLD 100
 
 #define FLEE_DURATION 15
 
