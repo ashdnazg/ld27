@@ -493,6 +493,8 @@ int main(int argc, char* argv[]){
     SDL_Renderer *ren = NULL;
     SDL_Surface *bmp = NULL;
     
+    SDL_Event e;
+    
     render_manager_t * r_manager = NULL;
     renderable_t *renderables[4];
     
@@ -501,9 +503,13 @@ int main(int argc, char* argv[]){
     int frames_skipped = 0;
     int frames_this_second = 0;
     int last_time = 0;
+    int i;
+    
+    bool pressed_a_key = FALSE;
     bool draw = TRUE;
     game_t *game;
-
+    renderable_t **caption;
+    
     if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_NOPARACHUTE) == -1){
         printf("SDLInit Error:%s", SDL_GetError());
         return 1;
@@ -520,12 +526,41 @@ int main(int argc, char* argv[]){
     
     game = game_new(r_manager);
     load_assets(game);
-    game_init(game);
+    
+    
+    
+    //INTRO SCREEN
+    pressed_a_key = FALSE;
+    caption = font_manager_print(game, game->f_manager, INTRO_STR1 INTRO_STR2 INTRO_STR3 INTRO_SPACE INTRO_STR4 INTRO_SPACE INTRO_SPACE INTRO_STR5 INTRO_STR6 INTRO_SPACE INTRO_SPACE INTRO_STR7,
+                    50 - game->r_manager->x_offset, 50 - game->r_manager->y_offset, INTRO_COLUMNS);
+    while (1) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                game->running = FALSE;
+                pressed_a_key = TRUE;
+                break;
+            }
+            if (e.type == SDL_KEYDOWN) {
+                pressed_a_key = TRUE;
+            }
+        }
+        render_manager_draw(r_manager);
+        if (pressed_a_key){
+            break;
+        }
+    }
+    for(i = 0;i < INTRO_COLUMNS * 12;++i) {
+        renderable_free(caption[i]);
+    }
+    mem_free(caption);
+    if (game->running) {
+        game_init(game);
+    }
     
     next_frame_time = SDL_GetTicks();
     last_time = SDL_GetTicks();
-    while (1) {
-        if(handle_input(game) || !(game->running)) {
+    while (game->running) {
+        if(handle_input(game)) {
             break;
         }
         

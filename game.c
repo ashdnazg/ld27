@@ -10,6 +10,21 @@
 #include <stdio.h>
 #include <assert.h>
 
+void print_achievements(game_t *game) {
+    printf("\nbump_baddies: %d",       game->achievements->bump_baddies);
+    printf("\ntackle_baddy: %d",       game->achievements->tackle_baddy);
+    printf("\nwiggled: %d",            game->achievements->wiggled);
+    printf("\nwiggled_at_player: %d",  game->achievements->wiggled_at_player);
+    printf("\ninjured_red: %d",        game->achievements->injured_red);
+    printf("\ninjured_blue: %d",       game->achievements->injured_blue);
+    printf("\ninjured_police: %d",     game->achievements->injured_police);
+    printf("\ntased_baddy: %d",        game->achievements->tased_baddy);
+    printf("\ntased_police: %d",       game->achievements->tased_police);
+    printf("\ntased_injured: %d",      game->achievements->tased_injured);
+    printf("\nsurvived: %d",           game->achievements->survived);
+}
+
+
 game_t * game_new(render_manager_t *r_manager) {
     game_t *game = mem_alloc(sizeof(game_t));
     game->r_manager = r_manager;
@@ -28,11 +43,13 @@ game_t * game_new(render_manager_t *r_manager) {
     game->samples = asset_manager_new((free_cb_t)sample_free);
     game->actors = list_new(actor_t, actors_link);
     game->achievements = mem_alloc(sizeof(achievements_t));
+    memset(game->achievements, 0, sizeof(achievements_t));
     memset(game->key_states, 0, sizeof(game->key_states));
     return game;
 }
 
 void game_free(game_t *game) {
+    print_achievements(game);
     sound_manager_free(game->s_manager);
     tween_manager_free(game->t_manager);
     font_manager_free(game->f_manager);
@@ -192,6 +209,10 @@ void game_step(game_t *game, bool draw) {
     }
     if(!(game->paused) && game->player->active){
         ++(game->steps);
+        if (game->steps > SURVIVED){
+            game->achievements->survived = TRUE;
+            game->running = FALSE;
+        }
     }
 }
 
@@ -255,7 +276,7 @@ void game_key_down(game_t *game, SDL_Scancode scan_code) {
 }
 
 void game_key_up(game_t *game, SDL_Scancode scan_code) {
-    assert(game->key_states[scan_code]);
+    //assert(game->key_states[scan_code]);
     game->key_states[scan_code] = FALSE;
     switch(scan_code) {
         case SDL_SCANCODE_UP:

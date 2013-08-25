@@ -34,15 +34,19 @@ typedef struct game_s game_t;
 #define LOGO_X 260
 #define LOGO_Y 210
 
+#define SURVIVED 589
+
 typedef struct achievements_s {
     bool bump_baddies;
     bool tackle_baddy;
     bool wiggled;
+    bool wiggled_at_player;
     bool injured_red;
     bool injured_blue;
     bool injured_police;
     bool tased_baddy;
     bool tased_police;
+    bool tased_injured;
     bool survived;
 } achievements_t;
 

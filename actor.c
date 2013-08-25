@@ -126,6 +126,7 @@ void actor_set_state(game_t *game, actor_t *actor, actor_state_t state) {
             mem_free(graphics_name);
             break;
         case STATE_WIGGLE:
+            game->achievements->wiggled = TRUE;
             graphics_name = actor_get_graphics_name(actor, STATE_WIGGLE);
             render_manager_play_animation(game->r_manager,  actor->renderable, asset_manager_get(game->animations, 
                                                     graphics_name), WIGGLE_INTERVAL, TRUE);
@@ -133,6 +134,7 @@ void actor_set_state(game_t *game, actor_t *actor, actor_state_t state) {
             if (actor->voice == NULL) {
                 actor->voice = sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "wiggle"), -1, TRUE, (void **) &(actor->voice));
             }
+            
             break;
         case STATE_JUMP:
             graphics_name = actor_get_graphics_name(actor, STATE_JUMP);
@@ -249,11 +251,29 @@ void actor_move(game_t *game, actor_t *actor) {
     actor_set_pos(actor,  new_x, new_y);
 }
 
+void injure_achievements(game_t *game, actor_t *actor) {
+    switch(actor->type){
+        case ACTOR_TYPE_POLICE:
+            game->achievements->injured_police = TRUE;
+            break;
+        case ACTOR_TYPE_BLUE_PLAYER:
+            game->achievements->injured_blue = TRUE;
+            break;
+        case ACTOR_TYPE_RED_PLAYER:
+            game->achievements->injured_red = TRUE;
+            break;
+    }
+}
+
 void actor_collide(game_t *game, actor_t *actor, actor_t *other) {
     int direction;
     if (DISTANCESQ(actor, other) < COLLISION_RADIUS * COLLISION_RADIUS) {
         if (actor->state == STATE_JUMP && other->state != STATE_JUMP) {
+            injure_achievements(game, other);
             if (actor->state_duration > 0) {
+                if (other != game->player) {
+                    game->achievements->tackle_baddy = TRUE;
+                }
                 actor_set_dir(game, other, actor->direction);
                 actor_set_state(game, other, STATE_JUMP);
             } else {
@@ -261,6 +281,11 @@ void actor_collide(game_t *game, actor_t *actor, actor_t *other) {
             }
             sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "bump"), -1, FALSE, NULL);
         } else if (actor->state != STATE_JUMP && other->state != STATE_JUMP) {
+            if (actor != game->player && other != game->player) {
+                game->achievements->bump_baddies = TRUE;
+            }
+            injure_achievements(game, actor);
+            injure_achievements(game, other);
             direction = get_direction(actor->x, actor->y, other->x, other->y);
             assert(direction != 0);
             actor_set_dir(game, other, direction);
@@ -298,6 +323,7 @@ void actor_step(game_t *game, actor_t *actor) {
         case STATE_WIGGLE: break;
         case STATE_SHOCK:
             if (actor->state_duration == 0) {
+                injure_achievements(game, actor);
                 actor_set_dir(game, actor, DIRECTION_S);
                 actor_set_state(game, actor, STATE_JUMP);
                 actor->state_duration = 0;

@@ -34,6 +34,15 @@ void put_renderable(game_t *game, projectile_t *projectile, int x, int y) {
 
 void taser_hit(game_t *game, projectile_t *projectile, actor_t *actor){
     sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "shock"), -1, FALSE, NULL);
+    if (actor != game->player) {
+        game->achievements->tased_baddy = TRUE;
+        if (actor->type == ACTOR_TYPE_POLICE) {
+            game->achievements->tased_police = TRUE;
+        }
+        if (!(actor->active)) {
+            game->achievements->tased_injured = TRUE;
+        }
+    }
     projectile->lifetime = SHOCK_DURATION;
     actor_set_state(game, actor, STATE_SHOCK);
 }
