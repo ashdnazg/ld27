@@ -18,6 +18,8 @@ typedef struct game_s game_t;
 #include <SDL2/SDL.h>
 
 #define MAX_SCORE_LEN 10
+#define SCORE_DEPTH 800
+
 #define FIELD_X 0
 #define FIELD_Y 0
 #define FIELD_DEPTH -1000
@@ -33,8 +35,28 @@ typedef struct game_s game_t;
 
 #define LOGO_X 260
 #define LOGO_Y 210
+#define LOGO_DEPTH 1000
+
+#define BLACK1_DEPTH 900
+#define BLACK2_DEPTH 2000
 
 #define SURVIVED 589
+
+#define CLOSING_DELAY 120
+
+#define ACHIEVEMENTS_STR  "Tomorrow's Headlines:  " 
+#define BUMP_STR          "Look where ya going!   "
+#define TACKLE_BADDY      "Football Security Sued "
+#define WIGGLED           "Psychiatric Hysteria   "
+#define WIGGLED_PLAYER    "Star Hands Resignation "
+#define INJURED_PLAYER    "Game Postponed         "
+#define INJURED_PLAYERS   "League in Crisis       "
+#define INJURED_POLICE    "Officers Embarassed    "
+#define TASED_BADDY       "Police Brutality       "
+#define TASED_POLICE      "Friendly Fire          "
+#define TASED_INJURED     "Adding insult to injury"
+#define SURVIVED_STR      "You're awesome!        "
+
 
 typedef struct achievements_s {
     bool bump_baddies;
@@ -69,6 +91,7 @@ struct game_s {
     bool running;
     bool key_states[SDL_NUM_SCANCODES] ;
     int steps;
+    int closing_delay;
 };
 
 

@@ -81,7 +81,7 @@ void animation_free(animation_t *animation);
 
 render_manager_t * render_manager_new(SDL_Renderer *renderer);
 void render_manager_free(render_manager_t *r_manager);
-
+void render_manager_clear(render_manager_t *r_manager);
 
 renderable_t * render_manager_create_renderable(render_manager_t *r_manager, sprite_t *default_sprite, int x, int y, int depth);
 void renderable_free(renderable_t *renderable);

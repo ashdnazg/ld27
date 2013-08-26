@@ -30,7 +30,7 @@ void font_manager_load_font(game_t *game, font_manager_t *f_manager, const char 
     f_manager->size_y = size_y;
 }
 
-renderable_t **font_manager_print(game_t *game, font_manager_t *f_manager, const char *text, int x, int y, unsigned int columns) {
+renderable_t **font_manager_print(game_t *game, font_manager_t *f_manager, const char *text, int x, int y, unsigned int columns, int depth) {
     int temp_x = x;
     int temp_y = y;
     int i;
@@ -40,7 +40,7 @@ renderable_t **font_manager_print(game_t *game, font_manager_t *f_manager, const
     for (i = 0;i < len;++i){
         temp_x = x + (f_manager->size_x + X_SPACING) * (i % columns);
         temp_y = y + (f_manager->size_y + Y_SPACING) * (i / columns);
-        renderables[i] = render_manager_create_renderable(game->r_manager, f_manager->letters[text[i]], temp_x, temp_y, TEXT_DEPTH);
+        renderables[i] = render_manager_create_renderable(game->r_manager, f_manager->letters[text[i]], temp_x, temp_y, depth);
     }
     return renderables;
 }

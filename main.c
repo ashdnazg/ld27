@@ -38,6 +38,7 @@ void load_assets(game_t *game){
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "field.png"), "field");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "logo.png"), "logo");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "taser_projectile.png"), "taser_projectile");
+    asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "black.png"), "black");
     
     
     //SOUTH
@@ -507,6 +508,7 @@ int main(int argc, char* argv[]){
     
     bool pressed_a_key = FALSE;
     bool draw = TRUE;
+    bool quit = FALSE;
     game_t *game;
     renderable_t **caption;
     
@@ -532,11 +534,11 @@ int main(int argc, char* argv[]){
     //INTRO SCREEN
     pressed_a_key = FALSE;
     caption = font_manager_print(game, game->f_manager, INTRO_STR1 INTRO_STR2 INTRO_STR3 INTRO_SPACE INTRO_STR4 INTRO_SPACE INTRO_SPACE INTRO_STR5 INTRO_STR6 INTRO_SPACE INTRO_SPACE INTRO_STR7,
-                    50 - game->r_manager->x_offset, 50 - game->r_manager->y_offset, INTRO_COLUMNS);
+                    50 - game->r_manager->x_offset, 50 - game->r_manager->y_offset, INTRO_COLUMNS, INTRO_DEPTH);
     while (1) {
         while (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
-                game->running = FALSE;
+                quit = TRUE;
                 pressed_a_key = TRUE;
                 break;
             }
@@ -553,14 +555,16 @@ int main(int argc, char* argv[]){
         renderable_free(caption[i]);
     }
     mem_free(caption);
-    if (game->running) {
+    
+    if (!quit) {
         game_init(game);
     }
     
     next_frame_time = SDL_GetTicks();
     last_time = SDL_GetTicks();
-    while (game->running) {
+    while (game->running && !quit) {
         if(handle_input(game)) {
+            quit = TRUE;
             break;
         }
         
@@ -593,12 +597,84 @@ int main(int argc, char* argv[]){
             SDL_Delay(1);
         }
     }
+    if (!quit) {
+        pressed_a_key = FALSE;
+        render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "black"), -game->r_manager->x_offset, -game->r_manager->y_offset, BLACK2_DEPTH);
+        int x=50 - game->r_manager->x_offset;
+        int y=50- game->r_manager->y_offset;
+        font_manager_print(game, game->f_manager, ACHIEVEMENTS_STR, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        y += 10;
+        x += 5;
+        if (game->achievements->bump_baddies) {
+            y += 9;
+            font_manager_print(game, game->f_manager, BUMP_STR, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->tackle_baddy) {
+            y += 9;
+            font_manager_print(game, game->f_manager, TACKLE_BADDY, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->wiggled) {
+            y += 9;
+            font_manager_print(game, game->f_manager, WIGGLED, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->wiggled_at_player) {
+            y += 9;
+            font_manager_print(game, game->f_manager, WIGGLED_PLAYER, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->injured_red || game->achievements->injured_blue) {
+            y += 9;
+            font_manager_print(game, game->f_manager, INJURED_PLAYER, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->injured_red && game->achievements->injured_blue) {
+            y += 9;
+            font_manager_print(game, game->f_manager, INJURED_PLAYERS, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->injured_police) {
+            y += 9;
+            font_manager_print(game, game->f_manager, INJURED_POLICE, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->tased_baddy) {
+            y += 9;
+            font_manager_print(game, game->f_manager, TASED_BADDY, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->tased_police) {
+            y += 9;
+            font_manager_print(game, game->f_manager, TASED_POLICE, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->tased_injured) {
+            y += 9;
+            font_manager_print(game, game->f_manager, TASED_INJURED, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        if (game->achievements->survived) {
+            y += 9;
+            font_manager_print(game, game->f_manager, SURVIVED_STR, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        }
+        y+= 18;
+        font_manager_print(game, game->f_manager, INTRO_STR7, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
+        
+        while (1) {
+            while (SDL_PollEvent(&e)) {
+                if (e.type == SDL_QUIT) {
+                    quit = TRUE;
+                    pressed_a_key = TRUE;
+                    break;
+                }
+                if (e.type == SDL_KEYDOWN) {
+                    pressed_a_key = TRUE;
+                }
+            }
+            render_manager_draw(r_manager);
+            if (pressed_a_key){
+                break;
+            }
+        }
+    }
     game_free(game);
     render_manager_free(r_manager);
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(win);
 
     SDL_Quit();
-    mem_wrap_print_mallocs();
+    //mem_wrap_print_mallocs();
     return 0;
 }

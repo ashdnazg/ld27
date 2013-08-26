@@ -29,7 +29,7 @@ void font_manager_free(font_manager_t *f_manager);
 
 void font_manager_load_font(game_t *game, font_manager_t *f_manager, const char *font_path, unsigned int size_x, unsigned int size_y);
 
-renderable_t **font_manager_print(game_t *game, font_manager_t *f_manager, const char *text, int x, int y, unsigned int columns);
+renderable_t **font_manager_print(game_t *game, font_manager_t *f_manager, const char *text, int x, int y, unsigned int columns, int depth);
 #ifdef __cplusplus
 }
 #endif

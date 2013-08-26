@@ -38,6 +38,7 @@ game_t * game_new(render_manager_t *r_manager) {
     game->len_timer_caption = 0;
     game->timer_caption = NULL;
     game->logo = NULL;
+    game->closing_delay = -1;
     game->sprites = asset_manager_new((free_cb_t) sprite_free);
     game->animations = asset_manager_new((free_cb_t) animation_free);
     game->samples = asset_manager_new((free_cb_t)sample_free);
@@ -49,7 +50,6 @@ game_t * game_new(render_manager_t *r_manager) {
 }
 
 void game_free(game_t *game) {
-    print_achievements(game);
     sound_manager_free(game->s_manager);
     tween_manager_free(game->t_manager);
     font_manager_free(game->f_manager);
@@ -107,7 +107,7 @@ void game_init(game_t *game) {
     actor_new(game, ACTOR_TYPE_RED_PLAYER,344,1122, DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_RED_PLAYER,366,1408, DIRECTION_S, ai_player_cb, NULL);
     
-    game->logo = render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "logo"), 0, 0, 1000);
+    game->logo = render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "logo"), 0, 0, LOGO_DEPTH);
     sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "ambient"), 20, TRUE, NULL);
 }
 
@@ -182,11 +182,18 @@ void update_timer(game_t *game) {
         score_str[0] = '0';
         game->len_timer_caption = 4;
     }
-    game->timer_caption = font_manager_print(game, game->f_manager, score_str, 10 - game->r_manager->x_offset, 10 - game->r_manager->y_offset, MAX_SCORE_LEN + 1);
+    game->timer_caption = font_manager_print(game, game->f_manager, score_str, 10 - game->r_manager->x_offset, 10 - game->r_manager->y_offset, MAX_SCORE_LEN + 1, SCORE_DEPTH);
 
 }
 
 void game_step(game_t *game, bool draw) {
+    if (game->closing_delay > 0) {
+        --(game->closing_delay);
+    } else if (game->closing_delay == 0){
+        game->running = FALSE;
+    } else if (!(game->player->active)){
+        game->closing_delay = CLOSING_DELAY;
+    }
     if (game->init || !(game->paused)){
         tween_manager_tween(game->t_manager);
         render_manager_animate(game->r_manager);
@@ -211,7 +218,10 @@ void game_step(game_t *game, bool draw) {
         ++(game->steps);
         if (game->steps > SURVIVED){
             game->achievements->survived = TRUE;
-            game->running = FALSE;
+            actor_set_state(game, game->player, STATE_STAND);
+            game->player->active = FALSE;
+            render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "black"), -game->r_manager->x_offset, -game->r_manager->y_offset, BLACK1_DEPTH);
+            font_manager_print(game, game->f_manager, "Broadcast will return shortly", 30 - game->r_manager->x_offset, 100 - game->r_manager->y_offset,30, LOGO_DEPTH);
         }
     }
 }

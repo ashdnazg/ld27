@@ -105,6 +105,12 @@ void render_manager_free(render_manager_t *r_manager) {
     mem_free(r_manager);
 }
 
+void render_manager_clear(render_manager_t *r_manager) {
+    list_for_each(r_manager->renderables, renderable_t *, renderable) {
+        renderable_free(renderable);
+    }
+}
+
 renderable_t * render_manager_create_renderable(render_manager_t *r_manager, sprite_t *default_sprite, int x, int y, int depth) {
     renderable_t *renderable = renderable_new(default_sprite, x , y, depth);
     list_insert_tail(r_manager->renderables, renderable);
