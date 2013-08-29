@@ -3,7 +3,11 @@
 #define GAME_HEIGHT 240
 #define WINDOW_SCALE 2
 #define STEP_INTERVAL 17
+#ifdef _WIN32
 #define ASSETS_DIR "assets\\"
+#else
+#define ASSETS_DIR "assets/"
+#endif
 #define AI_FREQ 4
 #define INTRO_DEPTH -2000
 #define INTRO_COLUMNS 26

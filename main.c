@@ -689,6 +689,6 @@ int main(int argc, char* argv[]){
     SDL_DestroyWindow(win);
 
     SDL_Quit();
-    //mem_wrap_print_mallocs();
+    mem_wrap_print_mallocs();
     return 0;
 }

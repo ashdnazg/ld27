@@ -181,6 +181,7 @@ SDL_Texture * load_image(render_manager_t *r_manager, const char * path) {
     texture = SDL_CreateTextureFromSurface(r_manager->renderer, bitmap);
     
     SDL_FreeSurface(bitmap);
+    free(image);
     asset_manager_add(r_manager->textures, texture, path);
     return texture;
 }
