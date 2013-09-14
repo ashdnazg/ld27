@@ -187,6 +187,8 @@ void update_timer(game_t *game) {
 }
 
 void game_step(game_t *game, bool draw) {
+    renderable_t **broadcast_caption;
+    
     if (game->closing_delay > 0) {
         --(game->closing_delay);
     } else if (game->closing_delay == 0){
@@ -220,8 +222,10 @@ void game_step(game_t *game, bool draw) {
             game->achievements->survived = TRUE;
             actor_set_state(game, game->player, STATE_STAND);
             game->player->active = FALSE;
+            game->paused = TRUE;
             render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "black"), -game->r_manager->x_offset, -game->r_manager->y_offset, BLACK1_DEPTH);
-            font_manager_print(game, game->f_manager, "Broadcast will return shortly", 30 - game->r_manager->x_offset, 100 - game->r_manager->y_offset,30, LOGO_DEPTH);
+            broadcast_caption = font_manager_print(game, game->f_manager, "Broadcast will return shortly", 30 - game->r_manager->x_offset, 100 - game->r_manager->y_offset,30, LOGO_DEPTH);
+            mem_free(broadcast_caption);
         }
     }
 }
