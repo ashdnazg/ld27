@@ -40,7 +40,7 @@ renderable_t **font_manager_print(game_t *game, font_manager_t *f_manager, const
     for (i = 0;i < len;++i){
         temp_x = x + (f_manager->size_x + X_SPACING) * (i % columns);
         temp_y = y + (f_manager->size_y + Y_SPACING) * (i / columns);
-        renderables[i] = render_manager_create_renderable(game->r_manager, f_manager->letters[text[i]], temp_x, temp_y, depth);
+        renderables[i] = render_manager_create_renderable(game->r_manager, f_manager->letters[(unsigned char) text[i]], temp_x, temp_y, depth);
     }
     return renderables;
 }

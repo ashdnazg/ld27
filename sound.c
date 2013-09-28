@@ -75,7 +75,6 @@ void sound_manager_free(sound_manager_t *s_manager) {
 }
 
 sample_playback_t * sound_manager_play_sample(sound_manager_t *s_manager, sample_t *sample, int volume, bool loop, void **parent_ptr) {
-    int ret;
     sample_playback_t *playback = sample_playback_new(sample, volume, loop, parent_ptr);
     if(!(s_manager->open)) {
         memcpy(s_manager->spec, sample->spec, sizeof(SDL_AudioSpec));

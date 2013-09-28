@@ -16,7 +16,6 @@ char * actor_get_graphics_name(actor_t *actor, actor_state_t state) {
     char *state_str;
     char *dir_str;
     int len;
-    int i = 0;
     
     switch(actor->type) {
         case ACTOR_TYPE_STREAKER:
@@ -241,7 +240,6 @@ actor_direction_t get_direction(int x1, int y1, int x2, int y2) {
 }
 
 void actor_move(game_t *game, actor_t *actor) {
-    int temp_direction;
     int new_x = actor->x + ((actor->direction & BIT_E) ? 1 : ((actor->direction & BIT_W) ? -1 : 0)) * (actor->direction & (BIT_N | BIT_S) ? 1 : 2);
     int new_y = actor->y + ((actor->direction & BIT_S) ? 1 : ((actor->direction & BIT_N) ? -1 : 0)) * (actor->direction & (BIT_W | BIT_E) ? 1 : 2);
     if (!inside_field(new_x, new_y)) {
@@ -261,6 +259,8 @@ void injure_achievements(game_t *game, actor_t *actor) {
             break;
         case ACTOR_TYPE_RED_PLAYER:
             game->achievements->injured_red = TRUE;
+            break;
+        default:
             break;
     }
 }

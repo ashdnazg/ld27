@@ -8,7 +8,6 @@
 void ai_security_cb(game_t *game, actor_t *actor) {
     int new_direction = 0;
     int collision_direction;
-    int i;
     if(!(actor->active)) {
         return;
     }
@@ -39,7 +38,6 @@ void ai_security_cb(game_t *game, actor_t *actor) {
 
 void ai_player_cb(game_t *game, actor_t *actor) {
     int new_direction = 0;
-    int i;
     if(!(actor->active) || actor->state_duration > 0) {
         return;
     }
@@ -81,7 +79,6 @@ void ai_player_cb(game_t *game, actor_t *actor) {
 void ai_police_cb(game_t *game, actor_t *actor) {
     int new_direction = 0;
     int collision_direction;
-    int i;
     if(!(actor->active)) {
         return;
     }

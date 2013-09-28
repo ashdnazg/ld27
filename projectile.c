@@ -144,7 +144,6 @@ int draw_line(game_t *game, projectile_t *projectile, bool trail, int len) {
 
 void projectile_step(game_t *game, projectile_t *projectile){
     int remaining = MIN(projectile->speed, projectile->length);
-    int next_remaining;
     if (projectile->lifetime != LIFETIME_PERMANENT) {
         if (projectile->lifetime == 0){
             projectile_free(projectile);

@@ -206,7 +206,6 @@ void sprite_free(sprite_t *sprite) {
 void draw_sprite(render_manager_t *r_manager, sprite_t *sprite, int x, int y, double scale, 
                  double angle, SDL_Point *center, SDL_RendererFlip flip) {
     SDL_Rect pos;
-    SDL_Rect target;
     pos.w = (int) (sprite->rect->w * scale);
     pos.h = (int) (sprite->rect->h * scale);
     pos.x = x + (sprite->rect->w - pos.w) / 2;

@@ -32,8 +32,6 @@ bool handle_input(game_t *game){
 
 void load_assets(game_t *game){
     sprite_t **sprites = mem_alloc(16 *sizeof(sprite_t *));
-    animation_t * anim = NULL;
-    int num_sprites, i;
     
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "field.png"), "field");
     asset_manager_add(game->sprites, load_sprite(game->r_manager, ASSETS_DIR "logo.png"), "logo");
@@ -492,12 +490,10 @@ void load_assets(game_t *game){
 int main(int argc, char* argv[]){
     SDL_Window *win = NULL;
     SDL_Renderer *ren = NULL;
-    SDL_Surface *bmp = NULL;
     
     SDL_Event e;
     
     render_manager_t * r_manager = NULL;
-    renderable_t *renderables[4];
     
     Uint32 next_frame_time = 0;
     Sint32 time_to_next = 0;
@@ -689,6 +685,6 @@ int main(int argc, char* argv[]){
     SDL_DestroyWindow(win);
 
     SDL_Quit();
-    mem_wrap_print_mallocs();
+    //mem_wrap_print_mallocs();
     return 0;
 }
