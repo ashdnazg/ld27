@@ -227,8 +227,10 @@ void game_step(game_t *game, bool draw) {
             actor_step(game, actor);
         }
     }
-    game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
-    game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
+    if (game->closing_delay <= 0) {
+        game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
+        game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
+    }
     if (draw) {
         game->logo->x = -game->r_manager->x_offset + LOGO_X;
         game->logo->y = -game->r_manager->y_offset + LOGO_Y;
