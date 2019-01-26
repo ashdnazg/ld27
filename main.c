@@ -523,57 +523,57 @@ void outro_init(game_t *game) {
     mem_free(caption);
     y += 10;
     x += 5;
-    if (game->achievements->bump_baddies) {
+    if (game->achievements.bump_baddies) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, BUMP_STR, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->tackle_baddy) {
+    if (game->achievements.tackle_baddy) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, TACKLE_BADDY, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->wiggled) {
+    if (game->achievements.wiggled) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, WIGGLED, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->wiggled_at_player) {
+    if (game->achievements.wiggled_at_player) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, WIGGLED_PLAYER, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->injured_red || game->achievements->injured_blue) {
+    if (game->achievements.injured_red || game->achievements.injured_blue) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, INJURED_PLAYER, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->injured_red && game->achievements->injured_blue) {
+    if (game->achievements.injured_red && game->achievements.injured_blue) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, INJURED_PLAYERS, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->injured_police) {
+    if (game->achievements.injured_police) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, INJURED_POLICE, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->tased_baddy) {
+    if (game->achievements.tased_baddy) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, TASED_BADDY, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->tased_police) {
+    if (game->achievements.tased_police) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, TASED_POLICE, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->tased_injured) {
+    if (game->achievements.tased_injured) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, TASED_INJURED, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
     }
-    if (game->achievements->survived) {
+    if (game->achievements.survived) {
         y += 9;
         caption = font_manager_print(game, game->f_manager, SURVIVED_STR, x, y, OUTRO_COLUMNS, OUTRO_DEPTH);
         mem_free(caption);
@@ -592,7 +592,9 @@ void outro(game_t *game) {
             return;
         }
         if (e.type == SDL_KEYDOWN) {
-            game->quit = TRUE;
+            game_free(game, TRUE);
+            render_manager_clear(game->r_manager);
+            intro_init(game);
             return;
         }
     }
@@ -622,7 +624,7 @@ void ingame(game_t* game) {
             } else {
                 ++game->frames_skipped;
                 draw = FALSE;
-                printf("\nskipped");
+                //printf("\nskipped");
             }
         } else {
             game->frames_skipped = 0;
@@ -695,7 +697,7 @@ int main(int argc, char* argv[]){
 #endif
     main_loop(game);
 
-    game_free(game);
+    game_free(game, FALSE);
     render_manager_free(r_manager);
 
     SDL_DestroyRenderer(ren);

@@ -11,17 +11,17 @@
 #include <assert.h>
 
 void print_achievements(game_t *game) {
-    printf("\nbump_baddies: %d",       game->achievements->bump_baddies);
-    printf("\ntackle_baddy: %d",       game->achievements->tackle_baddy);
-    printf("\nwiggled: %d",            game->achievements->wiggled);
-    printf("\nwiggled_at_player: %d",  game->achievements->wiggled_at_player);
-    printf("\ninjured_red: %d",        game->achievements->injured_red);
-    printf("\ninjured_blue: %d",       game->achievements->injured_blue);
-    printf("\ninjured_police: %d",     game->achievements->injured_police);
-    printf("\ntased_baddy: %d",        game->achievements->tased_baddy);
-    printf("\ntased_police: %d",       game->achievements->tased_police);
-    printf("\ntased_injured: %d",      game->achievements->tased_injured);
-    printf("\nsurvived: %d",           game->achievements->survived);
+    printf("\nbump_baddies: %d",       game->achievements.bump_baddies);
+    printf("\ntackle_baddy: %d",       game->achievements.tackle_baddy);
+    printf("\nwiggled: %d",            game->achievements.wiggled);
+    printf("\nwiggled_at_player: %d",  game->achievements.wiggled_at_player);
+    printf("\ninjured_red: %d",        game->achievements.injured_red);
+    printf("\ninjured_blue: %d",       game->achievements.injured_blue);
+    printf("\ninjured_police: %d",     game->achievements.injured_police);
+    printf("\ntased_baddy: %d",        game->achievements.tased_baddy);
+    printf("\ntased_police: %d",       game->achievements.tased_police);
+    printf("\ntased_injured: %d",      game->achievements.tased_injured);
+    printf("\nsurvived: %d",           game->achievements.survived);
 }
 
 
@@ -44,19 +44,12 @@ game_t * game_new(render_manager_t *r_manager) {
     game->animations = asset_manager_new((free_cb_t) animation_free);
     game->samples = asset_manager_new((free_cb_t)sample_free);
     game->actors = list_new(actor_t, actors_link);
-    game->achievements = mem_alloc(sizeof(achievements_t));
-    memset(game->achievements, 0, sizeof(achievements_t));
+    memset(&game->achievements, 0, sizeof(achievements_t));
     memset(game->key_states, 0, sizeof(game->key_states));
     return game;
 }
 
-void game_free(game_t *game) {
-    sound_manager_free(game->s_manager);
-    tween_manager_free(game->t_manager);
-    font_manager_free(game->f_manager);
-    asset_manager_free(game->sprites);
-    asset_manager_free(game->animations);
-    asset_manager_free(game->samples);
+void game_free(game_t *game, bool restart) {
     if (game->timer_caption != NULL){
         mem_free(game->timer_caption);
     }
@@ -66,9 +59,28 @@ void game_free(game_t *game) {
     list_for_each(game->actors, actor_t *, actor) {
         actor_free(actor);
     }
-    mem_free(game->achievements);
-    list_free(game->actors);
-    mem_free(game);
+    if (!restart) {
+        sound_manager_free(game->s_manager);
+        tween_manager_free(game->t_manager);
+        font_manager_free(game->f_manager);
+        asset_manager_free(game->sprites);
+        asset_manager_free(game->animations);
+        asset_manager_free(game->samples);
+        list_free(game->actors);
+        mem_free(game);
+    } else {
+        game->paused = TRUE;
+        game->quit = FALSE;
+        game->init = FALSE;
+        game->running = TRUE;
+        game->steps = 0;
+        game->len_timer_caption = 0;
+        game->timer_caption = NULL;
+        game->logo = NULL;
+        game->closing_delay = -1;
+        memset(&game->achievements, 0, sizeof(achievements_t));
+        memset(game->key_states, 0, sizeof(game->key_states));
+    }
 }
 
 void game_init(game_t *game) {
@@ -226,7 +238,7 @@ void game_step(game_t *game, bool draw) {
     if(!(game->paused) && game->player->active){
         ++(game->steps);
         if (game->steps > SURVIVED){
-            game->achievements->survived = TRUE;
+            game->achievements.survived = TRUE;
             actor_set_state(game, game->player, STATE_STAND);
             game->player->active = FALSE;
             game->paused = TRUE;

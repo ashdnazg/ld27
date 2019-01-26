@@ -125,7 +125,7 @@ void actor_set_state(game_t *game, actor_t *actor, actor_state_t state) {
             mem_free(graphics_name);
             break;
         case STATE_WIGGLE:
-            game->achievements->wiggled = TRUE;
+            game->achievements.wiggled = TRUE;
             graphics_name = actor_get_graphics_name(actor, STATE_WIGGLE);
             render_manager_play_animation(game->r_manager,  actor->renderable, asset_manager_get(game->animations, 
                                                     graphics_name), WIGGLE_INTERVAL, TRUE);
@@ -252,13 +252,13 @@ void actor_move(game_t *game, actor_t *actor) {
 void injure_achievements(game_t *game, actor_t *actor) {
     switch(actor->type){
         case ACTOR_TYPE_POLICE:
-            game->achievements->injured_police = TRUE;
+            game->achievements.injured_police = TRUE;
             break;
         case ACTOR_TYPE_BLUE_PLAYER:
-            game->achievements->injured_blue = TRUE;
+            game->achievements.injured_blue = TRUE;
             break;
         case ACTOR_TYPE_RED_PLAYER:
-            game->achievements->injured_red = TRUE;
+            game->achievements.injured_red = TRUE;
             break;
         default:
             break;
@@ -272,7 +272,7 @@ void actor_collide(game_t *game, actor_t *actor, actor_t *other) {
             injure_achievements(game, other);
             if (actor->state_duration > 0) {
                 if (other != game->player) {
-                    game->achievements->tackle_baddy = TRUE;
+                    game->achievements.tackle_baddy = TRUE;
                 }
                 actor_set_dir(game, other, actor->direction);
                 actor_set_state(game, other, STATE_JUMP);
@@ -282,7 +282,7 @@ void actor_collide(game_t *game, actor_t *actor, actor_t *other) {
             sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "bump"), -1, FALSE, NULL);
         } else if (actor->state != STATE_JUMP && other->state != STATE_JUMP) {
             if (actor != game->player && other != game->player) {
-                game->achievements->bump_baddies = TRUE;
+                game->achievements.bump_baddies = TRUE;
             }
             injure_achievements(game, actor);
             injure_achievements(game, other);

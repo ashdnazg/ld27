@@ -80,7 +80,7 @@ struct game_s {
     asset_manager_t *sprites;
     asset_manager_t *animations;
     asset_manager_t *samples;
-    achievements_t *achievements;
+    achievements_t achievements;
     list_t *actors;
     actor_t *player;
     renderable_t **timer_caption;
@@ -102,7 +102,7 @@ struct game_s {
 
 
 game_t * game_new(render_manager_t *r_manager);
-void game_free(game_t *game);
+void game_free(game_t *game, bool restart);
 
 void game_step(game_t *game, bool draw);
 void game_init(game_t *game);
