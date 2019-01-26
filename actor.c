@@ -171,8 +171,8 @@ void actor_set_state(game_t *game, actor_t *actor, actor_state_t state) {
 void actor_set_pos(actor_t *actor, int x, int y) {
     actor->x = x;
     actor->y = y;
-    actor->renderable->x = x / 2 - ACTOR_WIDTH / 2;
-    actor->renderable->y = y / 3 - ACTOR_HEIGHT / 2;
+    actor->renderable->x = x / 3 - ACTOR_WIDTH / 2;
+    actor->renderable->y = y / 6 - ACTOR_HEIGHT / 2;
 }
 void actor_set_dir(game_t *game, actor_t *actor, actor_direction_t direction) {
     if (direction != 0) {
@@ -193,7 +193,7 @@ actor_t * actor_new(game_t *game, actor_type_t type, int x, int y, actor_directi
     actor->ai_params = ai_params;
     link_init(&(actor->actors_link));
     list_insert_tail(game->actors, actor);
-    actor_set_pos(actor, x, y);
+    actor_set_pos(actor, (x * 3) / 2, y * 2);
     actor_set_dir(game, actor, direction);
     return actor;
 }
@@ -240,8 +240,8 @@ actor_direction_t get_direction(int x1, int y1, int x2, int y2) {
 }
 
 void actor_move(game_t *game, actor_t *actor) {
-    int new_x = actor->x + ((actor->direction & BIT_E) ? 1 : ((actor->direction & BIT_W) ? -1 : 0)) * (actor->direction & (BIT_N | BIT_S) ? 1 : 2);
-    int new_y = actor->y + ((actor->direction & BIT_S) ? 1 : ((actor->direction & BIT_N) ? -1 : 0)) * (actor->direction & (BIT_W | BIT_E) ? 1 : 2);
+    int new_x = actor->x + ((actor->direction & BIT_E) ? 1 : ((actor->direction & BIT_W) ? -1 : 0)) * (actor->direction & (BIT_N | BIT_S) ? 3 : 4);
+    int new_y = actor->y + ((actor->direction & BIT_S) ? 1 : ((actor->direction & BIT_N) ? -1 : 0)) * (actor->direction & (BIT_W | BIT_E) ? 3 : 4);
     if (!inside_field(new_x, new_y)) {
         new_x = actor->x;
         new_y = actor->y;
@@ -317,7 +317,7 @@ void actor_step(game_t *game, actor_t *actor) {
             }
             if (actor->state_duration == TASE_SHOT_MOMENT) {
                 actor->projectile = projectile_new(game, asset_manager_get(game->sprites, "taser_projectile"), actor->x, actor->y,
-                                                     (actor->aim_x + game->player->x) / 2, (actor->aim_y + game->player->y) / 2, 40, 120, 20, TRUE, taser_hit, actor);
+                                                     (actor->aim_x + game->player->x) / 2, (actor->aim_y + game->player->y) / 2, 40, (TASE_THRESHOLD / 4) * 5, 20, TRUE, taser_hit, actor);
             }
             break;
         case STATE_WIGGLE: break;

@@ -216,7 +216,7 @@ void game_step(game_t *game, bool draw) {
     } else if (!(game->player->active)){
         game->closing_delay = CLOSING_DELAY;
     }
-    if (game->running){
+    if (game->running && (!game->paused)){
         tween_manager_tween(game->t_manager);
         render_manager_animate(game->r_manager);
         if((game->steps % AI_FREQ) == 0) {
@@ -226,9 +226,9 @@ void game_step(game_t *game, bool draw) {
         list_for_each(game->actors, actor_t *, actor) {
             actor_step(game, actor);
         }
-        game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
-        game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
     }
+    game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
+    game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
     if (draw) {
         game->logo->x = -game->r_manager->x_offset + LOGO_X;
         game->logo->y = -game->r_manager->y_offset + LOGO_Y;

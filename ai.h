@@ -9,10 +9,10 @@ extern "C" {
 #include "actor.h"
 #include "game.h"
 
-#define CLOSE_THRESHOLD 20
-#define JUMP_THRESHOLD 12
-#define TASE_THRESHOLD 100
-#define HORROR_THRESHOLD 100
+#define CLOSE_THRESHOLD 40
+#define JUMP_THRESHOLD 24
+#define TASE_THRESHOLD 150
+#define HORROR_THRESHOLD 200
 
 #define FLEE_DURATION 15
 

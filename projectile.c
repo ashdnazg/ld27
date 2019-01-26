@@ -27,7 +27,7 @@ projectile_t * projectile_new(game_t *game, sprite_t *sprite, int x, int y, int 
     return projectile;
 }
 void put_renderable(game_t *game, projectile_t *projectile, int x, int y) {
-    projectile->renderables[projectile->num_renderables] = render_manager_create_renderable(game->r_manager, projectile->sprite, x / 2, y / 3, PROJECTILE_DEPTH);
+    projectile->renderables[projectile->num_renderables] = render_manager_create_renderable(game->r_manager, projectile->sprite, x / 3, y / 6, PROJECTILE_DEPTH);
     ++(projectile->num_renderables);
     projectile->length -= 1;
 }
