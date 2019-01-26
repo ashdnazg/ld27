@@ -86,12 +86,18 @@ struct game_s {
     renderable_t **timer_caption;
     renderable_t *logo;
     unsigned int len_timer_caption;
+    bool quit;
     bool init;
     bool paused;
     bool running;
     bool key_states[SDL_NUM_SCANCODES] ;
     int steps;
     int closing_delay;
+    unsigned next_frame_time;
+    int time_to_next;
+    int frames_skipped;
+    int frames_this_second;
+    int last_time;
 };
 
 

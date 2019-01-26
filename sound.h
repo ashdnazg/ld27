@@ -10,26 +10,11 @@ extern "C" {
 #include "macros.h"
 #include <SDL2/SDL.h>
 
-typedef struct sample_s {
-    SDL_AudioSpec *spec;
-    Uint8 *data;
-    Uint32 len;
-} sample_t;
+typedef struct sample_s sample_t;
 
-typedef struct sample_playback_s {
-    link_t played_samples_link;
-    sample_t *sample;
-    Uint32 pos;
-    int volume;
-    bool loop;
-    void **parent_ptr;
-} sample_playback_t;
+typedef struct sample_playback_s sample_playback_t;
 
-typedef struct sound_manager_s {
-    list_t *played_samples;
-    SDL_AudioSpec *spec;
-    bool open;
-} sound_manager_t;
+typedef struct sound_manager_s sound_manager_t;
 
 
 sound_manager_t * sound_manager_new(void);

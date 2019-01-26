@@ -6,6 +6,28 @@
 #include <stdio.h>
 #include <assert.h>
 
+struct sample_s {
+    SDL_AudioSpec *spec;
+    Uint8 *data;
+    Uint32 len;
+};
+
+struct sample_playback_s {
+    link_t played_samples_link;
+    sample_t *sample;
+    Uint32 pos;
+    int volume;
+    bool loop;
+    void **parent_ptr;
+};
+
+
+struct sound_manager_s {
+    list_t *played_samples;
+    SDL_AudioSpec *spec;
+    bool open;
+};
+
 
 void exit_on_SDL_sound_error(void *pt) {
     if(pt == NULL) {
@@ -38,7 +60,7 @@ void sample_playback_free(sample_playback_t * playback){
 void sound_callback(sound_manager_t *s_manager, Uint8 *stream, int len) {
     SDL_memset(stream, 0, len);
     int remaining;
-	list_for_each(s_manager->played_samples, sample_playback_t *, playback) {
+    list_for_each(s_manager->played_samples, sample_playback_t *, playback) {
         assert(!(playback->loop && (playback->sample->len < len)));
         remaining = (playback->sample->len - playback->pos);
         SDL_MixAudio(stream, &(playback->sample->data[playback->pos]), MIN(len, remaining), playback->volume);
@@ -122,5 +144,4 @@ sample_t * load_sample(sound_manager_t *s_manager, const char *path) {
     spec->userdata = s_manager;
     
     return sample_new(data, len, spec);
-    
 }

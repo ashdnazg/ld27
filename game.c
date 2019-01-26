@@ -32,7 +32,8 @@ game_t * game_new(render_manager_t *r_manager) {
     game->t_manager = tween_manager_new();
     game->f_manager = font_manager_new();
     game->paused = TRUE;
-    game->init = TRUE;
+    game->quit = FALSE;
+    game->init = FALSE;
     game->running = TRUE;
     game->steps = 0;
     game->len_timer_caption = 0;
@@ -109,6 +110,13 @@ void game_init(game_t *game) {
     
     game->logo = render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "logo"), 0, 0, LOGO_DEPTH);
     sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "ambient"), 20, TRUE, NULL);
+    game->init = TRUE;
+
+    game->next_frame_time = SDL_GetTicks();
+    game->last_time = SDL_GetTicks();
+    game->time_to_next = 0;
+    game->frames_skipped = 0;
+    game->frames_this_second = 0;
 }
 
 void ai_step(game_t *game) {
@@ -196,7 +204,7 @@ void game_step(game_t *game, bool draw) {
     } else if (!(game->player->active)){
         game->closing_delay = CLOSING_DELAY;
     }
-    if (game->init || !(game->paused)){
+    if (game->running){
         tween_manager_tween(game->t_manager);
         render_manager_animate(game->r_manager);
         if((game->steps % AI_FREQ) == 0) {
@@ -208,7 +216,6 @@ void game_step(game_t *game, bool draw) {
         }
         game->r_manager->x_offset = GAME_WIDTH / 2 - game->player->renderable->x + ACTOR_WIDTH / 2;
         game->r_manager->y_offset = GAME_HEIGHT / 2 - game->player->renderable->y + ACTOR_HEIGHT / 2;
-        game->init = FALSE;
     }
     if (draw) {
         game->logo->x = -game->r_manager->x_offset + LOGO_X;

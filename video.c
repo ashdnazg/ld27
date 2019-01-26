@@ -2,9 +2,10 @@
 #include "mem_wrap.h"
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <assert.h>
+#include <stdio.h>
 
-#include "stb_image.h"
 #include "int_list.h"
 #include "macros.h"
 #include "assets.h"
@@ -109,6 +110,11 @@ void render_manager_clear(render_manager_t *r_manager) {
     list_for_each(r_manager->renderables, renderable_t *, renderable) {
         renderable_free(renderable);
     }
+    list_free(r_manager->renderables);
+    r_manager->renderables = list_new(renderable_t, renderables_link);
+    assert(list_head(r_manager->animation_playbacks) == NULL);
+    list_free(r_manager->animation_playbacks);
+    r_manager->animation_playbacks = list_new(animation_playback_t, animation_playbacks_link);
 }
 
 renderable_t * render_manager_create_renderable(render_manager_t *r_manager, sprite_t *default_sprite, int x, int y, int depth) {
@@ -157,31 +163,18 @@ void exit_on_SDL_error(void * pt) {
     }
 }
 
-void exit_on_stbi_error(void * pt) {
-    if(pt == NULL) {
-        printf("STBI Error: %s\n", stbi_failure_reason());
-        exit(1);
-    }
-}
-
 SDL_Texture * load_image(render_manager_t *r_manager, const char * path) {
-    int im_w, im_h;
-    unsigned char *image = NULL;
     SDL_Surface *bitmap = NULL;
     SDL_Texture *texture = asset_manager_get(r_manager->textures, path);
     if (texture != NULL) {
         return texture;
     }
-    image = stbi_load(path, &im_w, &im_h, NULL, RGBA);
-    exit_on_stbi_error(image);
     
-    bitmap = SDL_CreateRGBSurfaceFrom(image, im_w, im_h, RGBA * 8, RGBA * im_w,
-                                   RMASK, GMASK, BMASK, AMASK);
+    bitmap = IMG_Load(path);
     exit_on_SDL_error(bitmap);
     texture = SDL_CreateTextureFromSurface(r_manager->renderer, bitmap);
     
     SDL_FreeSurface(bitmap);
-    free(image);
     asset_manager_add(r_manager->textures, texture, path);
     return texture;
 }
