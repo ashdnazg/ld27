@@ -90,12 +90,12 @@ void game_init(game_t *game) {
     actor_new(game, ACTOR_TYPE_SECURITY, 874, 1360, DIRECTION_S, ai_security_cb, NULL);
     actor_new(game, ACTOR_TYPE_SECURITY, 736,650, DIRECTION_S, ai_security_cb, NULL);
     actor_new(game, ACTOR_TYPE_SECURITY, 380,966, DIRECTION_S, ai_security_cb, NULL);
-    
+
     actor_new(game, ACTOR_TYPE_POLICE, 1444,  728, DIRECTION_S, ai_police_cb, NULL);
     actor_new(game, ACTOR_TYPE_POLICE, 1095,  413, DIRECTION_S, ai_police_cb, NULL);
     actor_new(game, ACTOR_TYPE_POLICE, 92,   1286, DIRECTION_S, ai_police_cb, NULL);
     actor_new(game, ACTOR_TYPE_POLICE, 518,  1648, DIRECTION_S, ai_police_cb, NULL);
-    
+
     actor_new(game, ACTOR_TYPE_BLUE_PLAYER,911, 1025,  DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_BLUE_PLAYER,873, 953 ,  DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_BLUE_PLAYER,779, 945 ,  DIRECTION_S, ai_player_cb, NULL);
@@ -107,7 +107,7 @@ void game_init(game_t *game) {
     actor_new(game, ACTOR_TYPE_BLUE_PLAYER,972, 594 ,  DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_BLUE_PLAYER,836, 666 , DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_BLUE_PLAYER,1222,622 , DIRECTION_S, ai_player_cb, NULL);
-    
+
     actor_new(game, ACTOR_TYPE_RED_PLAYER,794,1090,  DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_RED_PLAYER,705,1037,  DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_RED_PLAYER,508,1014,  DIRECTION_S, ai_player_cb, NULL);
@@ -119,7 +119,7 @@ void game_init(game_t *game) {
     actor_new(game, ACTOR_TYPE_RED_PLAYER,442,1226,  DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_RED_PLAYER,344,1122, DIRECTION_S, ai_player_cb, NULL);
     actor_new(game, ACTOR_TYPE_RED_PLAYER,366,1408, DIRECTION_S, ai_player_cb, NULL);
-    
+
     game->logo = render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "logo"), 0, 0, LOGO_DEPTH);
     sound_manager_play_sample(game->s_manager, asset_manager_get(game->samples, "ambient"), 20, TRUE, NULL);
     game->init = TRUE;
@@ -208,11 +208,13 @@ void update_timer(game_t *game) {
 
 void game_step(game_t *game, bool draw) {
     renderable_t **broadcast_caption;
-    
+
     if (game->closing_delay > 0) {
         --(game->closing_delay);
+        sound_manager_clear(game->s_manager);
     } else if (game->closing_delay == 0){
         game->running = FALSE;
+        sound_manager_clear(game->s_manager);
     } else if (!(game->player->active)){
         game->closing_delay = CLOSING_DELAY;
     }
@@ -272,7 +274,7 @@ void update_player_state(game_t *game) {
             direction |= BIT_W;
         }
     }
-    
+
     if (game->key_states[SDL_SCANCODE_SPACE]) {
         if (direction != 0) {
             actor_set_dir(game, game->player, (actor_direction_t) direction);
