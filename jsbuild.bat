@@ -1,0 +1,2 @@
+::del test.exe
+emcc -O2 main.c int_list.c video.c game.c assets.c mem_wrap.c sound.c tween.c actor.c ai.c font.c projectile.c -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS=["png"] --preload-file assets -o streaker.js
