@@ -211,7 +211,6 @@ void game_step(game_t *game, bool draw) {
 
     if (game->closing_delay > 0) {
         --(game->closing_delay);
-        sound_manager_clear(game->s_manager);
     } else if (game->closing_delay == 0){
         game->running = FALSE;
         sound_manager_clear(game->s_manager);

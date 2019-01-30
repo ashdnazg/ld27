@@ -98,7 +98,7 @@ void sound_manager_free(sound_manager_t *s_manager) {
 
 void sound_manager_clear(sound_manager_t *s_manager){
     list_for_each(s_manager->played_samples, sample_playback_t *, playback) {
-        sample_playback_free(playback);
+        playback->loop = FALSE;
     }
 }
 
