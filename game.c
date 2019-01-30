@@ -247,6 +247,7 @@ void game_step(game_t *game, bool draw) {
             game->paused = TRUE;
             render_manager_create_renderable(game->r_manager, asset_manager_get(game->sprites, "black"), -game->r_manager->x_offset, -game->r_manager->y_offset, BLACK1_DEPTH);
             broadcast_caption = font_manager_print(game, game->f_manager, "Broadcast will return shortly", 30 - game->r_manager->x_offset, 100 - game->r_manager->y_offset,30, LOGO_DEPTH);
+            sound_manager_clear(game->s_manager);
             mem_free(broadcast_caption);
         }
     }
